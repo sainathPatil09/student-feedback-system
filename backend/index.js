@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import adminRoute from './routes/admin.route.js'
 import coordinatorRoute from './routes/coordinator.route.js'
+import facultyRoute from './routes/faculty.route.js'
 
 
 dotenv.config()
@@ -25,6 +26,7 @@ app.use("/home", (req, res)=>{
 })
 app.use('/api', adminRoute)
 app.use('/api', coordinatorRoute)
+app.use('/api', facultyRoute)
 
 app.listen(port, ()=>{
     console.log(`App listning on port ${port}`)
