@@ -1,7 +1,9 @@
 import { facultyModel } from "../model/faculty.model.js";
 import { studentModel } from "../model/student.model.js";
+import { accessKeyModel } from "../model/studentKey.model.js";
 import csv from "csvtojson";
 import xlsx from "xlsx";
+import crypto from 'crypto'
 
 
 
@@ -110,3 +112,26 @@ export const facultyData = async (req, res) => {
       res.status(500).send({ error: "Failed to import data" });
     }
   };
+
+
+  export const generateAccessKey = async (req, res) => {
+    try {
+        // Generate a random access key
+        const studentAccessKey = crypto.randomBytes(16).toString('hex');
+        
+        // Set validity period (e.g., 24 hours)
+        const validUntil = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+        // Save the key to the database
+        const newKey = new accessKeyModel({
+            key: studentAccessKey,
+            validUntil
+        });
+        await newKey.save();
+
+        res.status(201).json({ message: "Student access key generated", studentAccessKey });
+    } catch (error) {
+        console.error("Error generating access key:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
