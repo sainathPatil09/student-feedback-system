@@ -1,5 +1,5 @@
 import express from 'express'
-import { adminLogin, adminSignup, facultyData, studentData } from '../controller/admin.controller.js'
+import { adminLogin, adminSignup, facultyData, registerCoordinator, studentData } from '../controller/admin.controller.js'
 import multer from 'multer'
 
 const router = express.Router()
@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
 router.post("/adminLogin", adminLogin)
 router.post("/adminSignup", adminSignup)
 router.post("/assignFaculty", facultyData)
+router.post("/registerCoordinator", registerCoordinator )
 router.post("/importStudent", upload.single("csvFile"), studentData)
 
 export default router

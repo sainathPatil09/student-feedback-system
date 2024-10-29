@@ -1,10 +1,11 @@
 import { adminModel } from "../model/admin.model.js";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
-import csv from 'csvtojson'
-import xlsx from 'xlsx';
+import csv from "csvtojson";
+import xlsx from "xlsx";
 import { facultyModel } from "../model/faculty.model.js";
 import { studentModel } from "../model/student.model.js";
+import { coordinatorModel } from "../model/coordinator.model.js";
 
 // admin signup
 export const adminSignup = async (req, res) => {
@@ -87,7 +88,7 @@ export const adminLogin = async (req, res) => {
 
 //admin will add facultyData
 export const facultyData = async (req, res) => {
-//   console.log("This facultyData");
+  //   console.log("This facultyData");
   try {
     const {
       facultyName,
@@ -115,7 +116,7 @@ export const facultyData = async (req, res) => {
       facultyYear,
       facultyDiv,
       subject,
-      facultyBranch
+      facultyBranch,
     });
 
     if (existingFaculty) {
@@ -145,24 +146,22 @@ export const facultyData = async (req, res) => {
   }
 };
 
-
 //admin will import studentData
-export const studentData =async (req, res)=>{
+export const studentData = async (req, res) => {
   // const jsonArray=await csv().fromFile(req.file.path);
   // console.log(jsonArray)
   // res.send(jsonArray)
-
 
   try {
     const filePath = req.file.path;
 
     let jsonArray;
-    if (req.file.mimetype === 'text/csv') {
+    if (req.file.mimetype === "text/csv") {
       // Parse CSV file
       jsonArray = await csv().fromFile(filePath);
     } else if (
       req.file.mimetype ===
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ) {
       // Parse Excel file
       const workbook = xlsx.readFile(filePath);
@@ -170,11 +169,11 @@ export const studentData =async (req, res)=>{
       const worksheet = workbook.Sheets[sheetName];
       jsonArray = xlsx.utils.sheet_to_json(worksheet);
     } else {
-      return res.status(400).send({ error: 'Unsupported file format' });
+      return res.status(400).send({ error: "Unsupported file format" });
     }
 
     const savedStudents = await studentModel.insertMany(
-      jsonArray.map(student => ({
+      jsonArray.map((student) => ({
         fullName: student.Name,
         email: student.Email,
         branch: student.branch,
@@ -189,6 +188,56 @@ export const studentData =async (req, res)=>{
     res.send(savedStudents);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'Failed to import data' });
+    res.status(500).send({ error: "Failed to import data" });
   }
-}
+};
+
+export const registerCoordinator = async (req, res) => {
+  // console.log(coordinatorName, coordinatorEmail, coordinatorBranch, coordinatorPhNumber)
+
+  try {
+    const {
+      coordinatorName,
+      coordinatorEmail,
+      coordinatorBranch,
+      coordinatorPhNumber,
+      coordinatorAccessKey,
+    } = req.body;
+
+    if (
+      !coordinatorName ||
+      !coordinatorEmail ||
+      !coordinatorBranch ||
+      !coordinatorPhNumber ||
+      !coordinatorAccessKey
+    ) {
+      return res.status(400).json({ message: "Please fill required fields" });
+    }
+
+    const coordinator = await coordinatorModel.findOne({ coordinatorBranch });
+    if (coordinator) {
+      return res
+        .status(400)
+        .json({ message: `coordinator already exist for ${coordinatorBranch} branch` });
+    }
+
+    const newCoordinator = new coordinatorModel({
+      coordinatorName,
+      coordinatorEmail,
+      coordinatorBranch,
+      coordinatorPhNumber,
+      coordinatorAccessKey,
+    });
+
+    await newCoordinator.save();
+
+    if (newCoordinator) {
+      res
+        .status(200)
+        .json({ message: "New Coordinator Created", newCoordinator });
+    }
+  } catch (error) {
+    console.log("Error in registerCoordinator", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
