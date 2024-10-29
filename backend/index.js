@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import adminRoute from './routes/admin.route.js'
+import coordinatorRoute from './routes/coordinator.route.js'
 
 
 dotenv.config()
@@ -23,6 +24,7 @@ app.use("/home", (req, res)=>{
     res.send("Home")
 })
 app.use('/api', adminRoute)
+app.use('/api', coordinatorRoute)
 
 app.listen(port, ()=>{
     console.log(`App listning on port ${port}`)
