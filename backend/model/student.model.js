@@ -30,6 +30,11 @@ const studentSchema = new mongoose.Schema({
     phNumber:{
         type:String,
         require:true,
+    },
+    feedbackGiven:{
+        type:Boolean,
+        require:true,
+        default:false,
     }
 })
 

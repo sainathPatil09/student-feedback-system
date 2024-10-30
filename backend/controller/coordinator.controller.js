@@ -102,6 +102,7 @@ export const facultyData = async (req, res) => {
           studentDiv: student.div,
           usn: student.usn,
           phNumber: student.phNumber,
+          feedbackGiven:false,
         }))
       );
   
@@ -135,3 +136,16 @@ export const facultyData = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+
+
+// reset student feedbackGiven to false
+
+export const resetFeedbackStatus =async (req, res)=>{
+  try {
+    await studentModel.updateMany({}, {feedbackGiven : false});
+    res.status(200).json({message: "Feedback status reset successfully"});
+  } catch (error) {
+    console.log("Error during feedback status reset:", error)
+    res.status(500).json({ message: "Server error" });
+  }
+}
