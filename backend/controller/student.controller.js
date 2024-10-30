@@ -1,3 +1,4 @@
+import { facultyModel } from "../model/faculty.model.js";
 import { studentModel } from "../model/student.model.js";
 import { accessKeyModel } from "../model/studentKey.model.js";
 
@@ -20,9 +21,12 @@ export const studentLogin =async (req, res)=>{
         if (!latestKey || latestKey.key !== studentAccessKey || latestKey.validUntil < new Date()) {
             return res.status(401).json({ message: "Invalid or expired access key" });
         }
+        
+        //filter faculty data of student year and div
+        const facultyList = await facultyModel.find({facultyYear: studentYear, facultyDiv: studentDiv});
 
         
-        res.status(200).json({ message: "Login successful" });
+        res.status(200).json({ message: "Login successful", facultyList });
 
 
 
