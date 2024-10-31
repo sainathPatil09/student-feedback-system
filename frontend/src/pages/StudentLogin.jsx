@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 
-const AdminLogin = () => {
+const StudentLogin = () => {
+  // fullName, email, branch,studentYear, studentDiv, usn, studentAccessKey
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [branch, setBranch] = useState("");
-  const [password, setPassword] = useState("");
+  const [year, setYear] = useState("");
+  const [div, setDiv] = useState("");
+  const [usn, setUsn] = useState("");
+  const [studentAccessKey, setstudentAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
       <div className="flex min-h-full flex-1 flex-col justify-center px-12 py-6 lg:px-8">
@@ -16,13 +21,30 @@ const AdminLogin = () => {
             className="mx-auto h-10 w-auto"
           /> */}
           <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight ">
-            Login
+            Student Login
           </h2>
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form method="POST" className="space-y-6">
-            
+          <form method="POST" className="space-y-3">
+            {/* fullName */}
+            <div>
+              <label
+                htmlFor="fullname"
+                className="block text-sm font-medium leading-6 "
+              >
+                Full Name
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  required
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 outline-none border-none text-lg"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
+            </div>
 
             {/* email */}
             <div>
@@ -67,6 +89,64 @@ const AdminLogin = () => {
               </div>
             </div>
 
+            <div className="flex gap-3">
+              {/* studentYear */}
+              <div>
+                <label
+                  htmlFor="Year"
+                  className="block text-sm font-medium leading-6 "
+                >
+                  Year
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    required
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* studentDiv */}
+              <div>
+                <label
+                  htmlFor="branch"
+                  className="block text-sm font-medium leading-6 "
+                >
+                  Division
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    required
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
+                    value={div}
+                    onChange={(e) => setDiv(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* USN */}
+            <div>
+              <label
+                htmlFor="branch"
+                className="block text-sm font-medium leading-6 "
+              >
+                USN
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  required
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
+                  value={usn}
+                  onChange={(e) => setUsn(e.target.value)}
+                />
+              </div>
+            </div>
+
             {/* password */}
             <div>
               <div className="flex items-center justify-between">
@@ -74,16 +154,9 @@ const AdminLogin = () => {
                   htmlFor="password"
                   className="block text-sm font-medium leading-6 "
                 >
-                  Password
+                  Student Access-Key
                 </label>
                 <div className="text-sm flex">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-400 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -98,8 +171,8 @@ const AdminLogin = () => {
                   type={showPassword ? "text" : "password"}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 outline-none border-none"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={studentAccessKey}
+                  onChange={(e) => setstudentAccessKey(e.target.value)}
                 />
               </div>
             </div>
@@ -110,24 +183,14 @@ const AdminLogin = () => {
                 required
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6  shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Admin Login
+                Student Login
               </button>
             </div>
           </form>
-
-          <p className="mt-10 text-center text-sm text-gray-500">
-            don't have account?{" "}
-            <Link
-              to={"/admin-signup"}
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-            >
-              Signup
-            </Link>
-          </p>
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminLogin;
+export default StudentLogin;

@@ -6,6 +6,7 @@ import Home from './components/Home.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import AdminSignup from './pages/AdminSignup.jsx'
 import { Route, Routes } from 'react-router-dom'
+import StudentLogin from './pages/StudentLogin.jsx'
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
       <Route path='/' element={<Home/>}/>
       <Route path='/admin-signup' element={<AdminSignup/>}/>
       <Route path='/admin-login' element={<AdminLogin/>}/>
+      <Route path='/student-login' element={<StudentLogin/>}/>
     </Routes>
     </>
   )

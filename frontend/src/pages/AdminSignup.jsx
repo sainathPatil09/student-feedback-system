@@ -11,7 +11,7 @@ const AdminSignup = () => {
   const [showPasswordKey, setShowPasswordKey] = useState(false);
 
   return (
-    <div className="shadow-xl border w-[30%] mx-auto mt-10">
+    <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
       <div className="flex min-h-full flex-1 flex-col justify-center px-12 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           {/* <img
