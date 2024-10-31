@@ -11,8 +11,8 @@ const AdminSignup = () => {
   const [showPasswordKey, setShowPasswordKey] = useState(false);
 
   return (
-    <div>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="shadow-xl border w-[30%] mx-auto mt-10">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-12 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           {/* <img
             alt="Your Company"
@@ -168,12 +168,12 @@ const AdminSignup = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             have account?{" "}
-            {/* <Link
-              to={"/login"}
+            <Link
+              to={"/admin-login"}
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Login
-            </Link> */}
+            </Link>
           </p>
         </div>
       </div>
