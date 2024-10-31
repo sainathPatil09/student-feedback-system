@@ -1,3 +1,4 @@
+import createTokenAndSaveCookie from "../jwt/generateToken.js";
 import { facultyModel } from "../model/faculty.model.js";
 import { studentModel } from "../model/student.model.js";
 import { accessKeyModel } from "../model/studentKey.model.js";
@@ -22,6 +23,7 @@ export const studentLogin =async (req, res)=>{
             return res.status(401).json({ message: "Invalid or expired access key" });
         }
         
+        createTokenAndSaveCookie(student._id, res);
         //filter faculty data of student year and div
         const facultyList = await facultyModel.find({facultyYear: studentYear, facultyDiv: studentDiv});
 
@@ -35,4 +37,9 @@ export const studentLogin =async (req, res)=>{
         return res.status(500).json({ error: "Server error" });
     }
     // res.send("Ok")
+}
+
+export const sendFeedback =(req, res)=>{
+    console.log("in sendFeedback route")
+    res.send("OK");
 }

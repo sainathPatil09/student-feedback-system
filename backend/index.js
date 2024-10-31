@@ -6,11 +6,13 @@ import adminRoute from './routes/admin.route.js'
 import coordinatorRoute from './routes/coordinator.route.js'
 import facultyRoute from './routes/faculty.route.js'
 import studentRoute from './routes/student.route.js'
+import cookieParser from 'cookie-parser'
 
 
 dotenv.config()
 const app = express()
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 const port = process.env.PORT
 const mongoURI = process.env.MONGO_URI
