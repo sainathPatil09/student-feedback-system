@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { facultyData, generateAccessKey, resetFeedbackStatus, studentData } from "../controller/coordinator.controller.js";
+import { coordinatorLogin, facultyData, generateAccessKey, resetFeedbackStatus, studentData } from "../controller/coordinator.controller.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -19,4 +19,5 @@ router.post("/assignFaculty", facultyData);
 router.post("/importStudent", upload.single("csvFile"), studentData);
 router.post('/generate-key', generateAccessKey);
 router.put('/resetFeedbackStatus', resetFeedbackStatus )
+router.post('/coordinatorlogin', coordinatorLogin )
 export default router
