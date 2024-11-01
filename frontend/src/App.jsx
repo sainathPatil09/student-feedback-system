@@ -8,6 +8,7 @@ import AdminSignup from './pages/AdminSignup.jsx'
 import { Route, Routes } from 'react-router-dom'
 import StudentLogin from './pages/StudentLogin.jsx'
 import FacultyLogin from './pages/FacultyLogin.jsx'
+import StudentPannel from './components/StudentPannel.jsx'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
       <Route path='/admin-login' element={<AdminLogin/>}/>
       <Route path='/student-login' element={<StudentLogin/>}/>
       <Route path='/faculty-login' element={<FacultyLogin/>}/>
+      <Route path='/student-pannel' element={<StudentPannel/>}/>
     </Routes>
     </>
   )
