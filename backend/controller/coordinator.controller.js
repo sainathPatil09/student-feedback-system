@@ -5,6 +5,7 @@ import csv from "csvtojson";
 import xlsx from "xlsx";
 import crypto from "crypto";
 import { coordinatorModel } from "../model/coordinator.model.js";
+import createTokenAndSaveCookie from "../jwt/generateToken.js";
 
 //coordinator will add facultyData
 export const facultyData = async (req, res) => {
@@ -92,21 +93,46 @@ export const studentData = async (req, res) => {
       return res.status(400).send({ error: "Unsupported file format" });
     }
 
-    const savedStudents = await studentModel.insertMany(
-      jsonArray.map((student) => ({
-        fullName: student.Name,
-        email: student.Email,
-        branch: student.branch,
-        studentYear: student.year,
-        studentDiv: student.div,
-        usn: student.usn,
-        phNumber: student.phNumber,
-        feedbackGiven: false,
-      }))
-    );
+    // const savedStudents = await studentModel.insertMany(
+    //   jsonArray.map((student) => ({
+    //     fullName: student.Name,
+    //     email: student.Email,
+    //     branch: student.branch,
+    //     studentYear: student.year,
+    //     studentDiv: student.div,
+    //     usn: student.usn,
+    //     phNumber: student.phNumber,
+    //     feedbackGiven: false,
+    //   }))
+    // );
 
-    // console.log(savedStudents);
-    res.send(savedStudents);
+    // // console.log(savedStudents);
+    // res.send(savedStudents);
+
+    // Filter out duplicates by checking if 'usn' exists
+    const studentsToInsert = [];
+    for (const student of jsonArray) {
+      const exists = await studentModel.findOne({ usn: student.usn });
+      if (!exists) {
+        studentsToInsert.push({
+          fullName: student.Name,
+          email: student.Email,
+          branch: student.branch,
+          studentYear: student.year,
+          studentDiv: student.div,
+          usn: student.usn,
+          phNumber: student.phNumber,
+          feedbackGiven: false,
+        });
+      }
+    }
+
+    if (studentsToInsert.length > 0) {
+      const savedStudents = await studentModel.insertMany(studentsToInsert);
+      res.send(savedStudents);
+    } else {
+      res.send({ message: "No new students to add" });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Failed to import data" });
@@ -185,6 +211,8 @@ export const coordinatorLogin = async (req, res) => {
     if (coordinator.coordinatorAccessKey !== coordinatorAccessKey) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
+
+    createTokenAndSaveCookie(coordinator._id, res);
 
     res.status(200).json({
       message: "coordinator logged in successfully",
