@@ -5,7 +5,7 @@ import { accessKeyModel } from "../model/studentKey.model.js";
 
 export const studentLogin =async (req, res)=>{
     try {
-        const{fullName, email, branch,studentYear, studentDiv, usn, studentAccessKey } = req.body
+        const{fullName, email, branch,year:studentYear, div:studentDiv, usn, studentAccessKey } = req.body
         // console.log(fullName, email, branch,studentYear, studentDiv, usn, studentAccessKey )
         
         // Check if student exists in the database
@@ -28,7 +28,7 @@ export const studentLogin =async (req, res)=>{
         const facultyList = await facultyModel.find({facultyYear: studentYear, facultyDiv: studentDiv});
 
         
-        res.status(200).json({ message: "Login successful", facultyList });
+        res.status(200).json({ message: "Login successful",student, facultyList });
 
 
 
