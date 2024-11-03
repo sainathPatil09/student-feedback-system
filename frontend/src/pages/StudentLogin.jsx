@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const StudentLogin = () => {
   // fullName, email, branch,studentYear, studentDiv, usn, studentAccessKey
@@ -10,6 +12,42 @@ const StudentLogin = () => {
   const [usn, setUsn] = useState("");
   const [studentAccessKey, setstudentAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigateTo = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post("/api/studentLogin", {
+        fullName,
+        email,
+        branch,
+        year,
+        div,
+        usn,
+        studentAccessKey,
+      });
+      console.log(data);
+      setFullName("");
+      setBranch("")
+      setEmail("");
+      setYear("")
+      setDiv("")
+      setUsn("")
+      setstudentAccessKey("")
+
+      localStorage.setItem("auth", JSON.stringify(data.student));
+
+      alert("Student logged in successfully")
+
+      navigateTo('/student-pannel')
+
+    } catch (error) {
+      alert("Error in loggin")
+      console.log(error)
+    }
+  };
 
   return (
     <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
@@ -26,7 +64,7 @@ const StudentLogin = () => {
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form method="POST" className="space-y-3">
+          <form onSubmit={handleLogin} method="POST" className="space-y-3">
             {/* fullName */}
             <div>
               <label
@@ -82,8 +120,8 @@ const StudentLogin = () => {
                   onChange={(e) => setBranch(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
                 >
-                  <option value="CSE">CSE</option>
                   <option value="AIDS">AIDS</option>
+                  <option value="CSE">CSE</option>
                   <option value="ECE">ECE</option>
                 </select>
               </div>
