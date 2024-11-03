@@ -1,12 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   return (
     <div>
-      <button className='border-2 p-2'>Admin Login</button>
-      <button className='border-2 p-2'>Coordinator Login</button>
-      <button className='border-2 p-2'>Faculty Login</button>
-      <button className='border-2 p-2'>Student Login</button>
+      <Link to={'/admin-login'} className='border-2 p-2'>Admin Login</Link>
+      <Link to={'/coordinator-login'} className='border-2 p-2'>Coordinator Login</Link>
+      <Link to={'/faculty-login'} className='border-2 p-2'>Faculty Login</Link>
+      <Link to={'/student-login'} className='border-2 p-2'>Student Login</Link>
     </div>
   )
 }
