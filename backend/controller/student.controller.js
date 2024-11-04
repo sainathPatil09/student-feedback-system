@@ -43,3 +43,22 @@ export const sendFeedback =(req, res)=>{
     console.log("in sendFeedback route")
     res.send("OK");
 }
+
+
+export const fetchFaculty =async(req, res)=>{
+    const { userId } = req.params;
+
+    try {
+        const student = await studentModel.findOne({_id : userId})
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        const faculty = await facultyModel.find({facultyYear: student.studentYear, facultyDiv: student.studentDiv})
+        res.status(200).json({ faculty });
+    
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+}
