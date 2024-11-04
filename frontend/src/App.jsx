@@ -13,7 +13,14 @@ import { useAuth } from './context/AuthProvider.jsx'
 import CoordinatorLogin from './pages/CoordinatorLogin.jsx'
 
 function App() {
-  const{authUser} = useAuth()
+  const{authUser, loading, isAuthenticated} = useAuth()
+  console.log(authUser)
+  console.log(loading)
+
+  if(loading) return (
+    <>........
+    </>
+  )
 
   return (
     <>
@@ -28,7 +35,8 @@ function App() {
       <Route path='/student-login' element={<StudentLogin/>}/>
       <Route path='/faculty-login' element={<FacultyLogin/>}/>
       <Route path='/coordinator-login' element={<CoordinatorLogin/>}/>
-      <Route path='/student-pannel' element={authUser ? <StudentPannel/> : <Navigate to={'/'}/>}/>
+      <Route path='/student-pannel' element={isAuthenticated ? <StudentPannel /> : <Navigate to='/'/> }/>
+      {/* <Route path='/student-pannel' element={(<StudentPannel />)}/> */}
     </Routes>
     </>
   )
