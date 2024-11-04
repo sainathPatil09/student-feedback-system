@@ -1,16 +1,51 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const CoordinatorLogin = () => {
     // coordinatorName,
     //   coordinatorEmail,
     //   coordinatorBranch,
     //   coordinatorAccessKey,
-    
+    const {setIsAuthenticated} = useAuth()
+    const navigateTo = useNavigate()
+
     const [coordinatorName, setCoordinatorName] = useState("");
     const [coordinatorEmail, setCoordinatorEmail] = useState("");
   const [coordinatorBranch, setCoordinatorBranch] = useState("");
   const [coordinatorAccessKey, setCoordinatorAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post("/api/coordinatorlogin", {
+        coordinatorName,
+        coordinatorEmail,
+        coordinatorBranch,
+        coordinatorAccessKey,
+      });
+      console.log(data);
+      setCoordinatorName("")
+      setCoordinatorEmail("")
+      setCoordinatorBranch("");
+      setCoordinatorAccessKey("")
+
+      localStorage.setItem("auth", JSON.stringify(data.coordinator));
+
+      alert("Coordinator logged in successfully")
+      console.log(data)
+      setIsAuthenticated(true)
+      navigateTo('/student-pannel')
+
+    } catch (error) {
+      alert("Error in coordinator loggin")
+      console.log(error)
+    }
+  };
+
   return (
     <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
       <div className="flex min-h-full flex-1 flex-col justify-center px-12 py-6 lg:px-8">
@@ -26,7 +61,7 @@ const CoordinatorLogin = () => {
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form method="POST" className="space-y-6">
+          <form onSubmit={handleLogin} method="POST" className="space-y-6">
             <div>
               <label
                 htmlFor="name"
@@ -80,6 +115,7 @@ const CoordinatorLogin = () => {
                   onChange={(e) => setCoordinatorBranch(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
                 >
+                  <option value="select">select</option>
                   <option value="CSE">CSE</option>
                   <option value="AIDS">AIDS</option>
                   <option value="ECE">ECE</option>

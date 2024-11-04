@@ -1,12 +1,49 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const FacultyLogin = () => {
   // facultyName, facultyEmail, facultyBranch, password
+  const navigateTo = useNavigate()
+  const {setIsAuthenticated} = useAuth()
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [branch, setBranch] = useState("");
   const [facultyAccessKey, setFacultyAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post("/api/loginFaculty", {
+        fullName,
+        email,
+        branch,
+        facultyAccessKey,
+      });
+      console.log(data);
+      setFullName("")
+      setEmail("");
+      setBranch("")
+      setFacultyAccessKey("")
+
+      localStorage.setItem("auth", JSON.stringify(data));
+
+      alert("Admin logged in successfully")
+      console.log(data)
+      setIsAuthenticated(true)
+      navigateTo('/student-pannel')
+
+    } catch (error) {
+      alert("Error in loggin")
+      console.log(error)
+    }
+  };
+
+
   return (
     <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
       <div className="flex min-h-full flex-1 flex-col justify-center px-12 py-6 lg:px-8">
@@ -22,7 +59,7 @@ const FacultyLogin = () => {
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form method="POST" className="space-y-3">
+          <form onSubmit={handleLogin} method="POST" className="space-y-3">
             {/* fullName */}
             <div>
               <label
@@ -78,6 +115,7 @@ const FacultyLogin = () => {
                   onChange={(e) => setBranch(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
                 >
+                  <option value="select">select</option>
                   <option value="CSE">CSE</option>
                   <option value="AIDS">AIDS</option>
                   <option value="ECE">ECE</option>

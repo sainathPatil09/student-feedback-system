@@ -185,6 +185,7 @@ export const coordinatorLogin = async (req, res) => {
       coordinatorBranch,
       coordinatorAccessKey,
     } = req.body;
+    // console.log(coordinatorName,coordinatorEmail,coordinatorBranch,coordinatorAccessKey)
 
     if (
       !coordinatorName ||
