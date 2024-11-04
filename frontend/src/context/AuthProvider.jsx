@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const initialState = Cookies.get("jwt");
   // const [authUser, setAuthUser] = useState(initialState ? JSON.parse(initialState) : undefined);
   const [authUser, setAuthUser] = useState(undefined)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     // Fetch user data from the server on initial load
@@ -15,6 +16,7 @@ export const AuthProvider = ({ children }) => {
       .get("/api/auth-User", { withCredentials: true })
       .then((response) => {
         setAuthUser(response.data.user);
+        setIsAuthenticated(true)
         setLoading(false)
         console.log(response.data.user) // Set user data from server
       })
@@ -25,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authUser, setAuthUser,loading, setLoading }}>
+    <AuthContext.Provider value={{ authUser, setAuthUser,loading, setLoading, isAuthenticated, setIsAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

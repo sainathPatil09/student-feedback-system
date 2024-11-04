@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 const StudentLogin = () => {
   // fullName, email, branch,studentYear, studentDiv, usn, studentAccessKey
@@ -12,6 +13,8 @@ const StudentLogin = () => {
   const [usn, setUsn] = useState("");
   const [studentAccessKey, setstudentAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const{authUser, loading, isAuthenticated, setIsAuthenticated} = useAuth()
 
   const navigateTo = useNavigate();
 
@@ -41,6 +44,7 @@ const StudentLogin = () => {
 
       alert("Student logged in successfully")
       console.log(data)
+      setIsAuthenticated(true)
       navigateTo('/student-pannel')
 
     } catch (error) {
