@@ -6,6 +6,7 @@ import adminRoute from './routes/admin.route.js'
 import coordinatorRoute from './routes/coordinator.route.js'
 import facultyRoute from './routes/faculty.route.js'
 import studentRoute from './routes/student.route.js'
+import authRoute from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 
@@ -33,6 +34,7 @@ app.use('/api', adminRoute)
 app.use('/api', coordinatorRoute)
 app.use('/api', facultyRoute)
 app.use('/api', studentRoute)
+app.use('/api', authRoute)
 
 app.listen(port, ()=>{
     console.log(`App listning on port ${port}`)

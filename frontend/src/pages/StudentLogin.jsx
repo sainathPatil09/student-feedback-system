@@ -40,7 +40,7 @@ const StudentLogin = () => {
       localStorage.setItem("auth", JSON.stringify(data.student));
 
       alert("Student logged in successfully")
-
+      console.log(data)
       navigateTo('/student-pannel')
 
     } catch (error) {
