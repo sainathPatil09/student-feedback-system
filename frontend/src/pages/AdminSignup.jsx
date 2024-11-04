@@ -1,14 +1,47 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AdminSignup = () => {
-  const [fullname, setFullName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [branch, setBranch] = useState("");
   const [password, setPassword] = useState("");
   const [accessKey, setAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordKey, setShowPasswordKey] = useState(false);
+  console.log(accessKey)
+
+  const navigateTo = useNavigate()
+  const handleSignup = async(e) => {
+    e.preventDefault();
+
+    try {
+      const { data } =await axios.post("/api/adminSignup", {
+        fullName,
+        email,
+        branch,
+        password,
+        accessKey,
+      });
+
+      console.log(data);
+      setFullName("");
+      setEmail("")
+      setBranch("")
+      setPassword("")
+      setAccessKey("")
+
+      // localStorage.setItem("auth", JSON.stringify(data.newAdmin));
+
+      alert("Admin signup successfully")
+      console.log(data)
+      navigateTo('/admin-login')
+    } catch (error) {
+      alert("Error in admin signup")
+      console.log(error)
+    }
+  };
 
   return (
     <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
@@ -25,7 +58,7 @@ const AdminSignup = () => {
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form method="POST" className="space-y-6">
+          <form onSubmit={handleSignup} method="POST" className="space-y-6">
             {/* fullName */}
             <div>
               <label
@@ -39,7 +72,7 @@ const AdminSignup = () => {
                   type="text"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 outline-none border-none text-lg"
-                  value={fullname}
+                  value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                 />
               </div>
@@ -78,7 +111,7 @@ const AdminSignup = () => {
                   required
                   id=""
                   value={branch}
-                  onChange={(e)=>setBranch(e.target.value)}
+                  onChange={(e) => setBranch(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
                 >
                   <option value="CSE">CSE</option>

@@ -13,7 +13,7 @@ const adminSchema = new mongoose.Schema({
     branch:{
         type:String,
         require:true,
-        enum:["CSE"]
+        enum:["CSE","AIDS"]
     },
     password:{
         type:String,
