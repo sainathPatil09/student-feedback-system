@@ -1,11 +1,46 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [branch, setBranch] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigateTo = useNavigate()
+
+  const {setIsAuthenticated} = useAuth()
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post("/api/adminLogin", {
+        email,
+        branch,
+        password,
+      });
+      console.log(data);
+      setBranch("")
+      setEmail("");
+      setPassword("")
+
+      localStorage.setItem("auth", JSON.stringify(data.admin));
+
+      alert("Admin logged in successfully")
+      console.log(data)
+      setIsAuthenticated(true)
+      navigateTo('/student-pannel')
+
+    } catch (error) {
+      alert("Error in loggin")
+      console.log(error)
+    }
+  };
+
+
+
   return (
     <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
       <div className="flex min-h-full flex-1 flex-col justify-center px-12 py-6 lg:px-8">
@@ -21,7 +56,7 @@ const AdminLogin = () => {
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form method="POST" className="space-y-6">
+          <form onSubmit={handleLogin} method="POST" className="space-y-6">
             
 
             {/* email */}

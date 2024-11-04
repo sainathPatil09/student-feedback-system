@@ -2,13 +2,14 @@ import { adminModel } from "../model/admin.model.js";
 import bcrypt from "bcryptjs";
 // import dotenv from "dotenv";
 import { coordinatorModel } from "../model/coordinator.model.js";
+import createTokenAndSaveCookie from "../jwt/generateToken.js";
 
 // admin signup
 export const adminSignup = async (req, res) => {
   // console.log("adminSignup route")
   try {
-    const { fullName, email, branch, password, accessCode } = req.body;
-    // console.log(fullName, email, branch, password, accessCode);
+    const { fullName, email, branch, password, accessKey:accessCode } = req.body;
+    console.log(fullName, email, branch, password, accessCode);
 
     if (!fullName || !email || !branch || !password || !accessCode) {
       return res.status(400).json({ message: "Please fill required fields" });
@@ -37,6 +38,7 @@ export const adminSignup = async (req, res) => {
     await newAdmin.save();
 
     if (newAdmin) {
+      console.log(newAdmin)
       res.status(200).json({ message: "New Admin Created", newAdmin });
     }
   } catch (error) {
@@ -47,7 +49,7 @@ export const adminSignup = async (req, res) => {
 
 // admin login
 export const adminLogin = async (req, res) => {
-  console.log("this is adminLogin route");
+  // console.log("this is adminLogin route");
 
   try {
     const { email, branch, password } = req.body;
@@ -68,6 +70,7 @@ export const adminLogin = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
+    createTokenAndSaveCookie(admin._id, res);
     res.status(200).json({
       message: "Admin logged in successfully",
       admin: {
