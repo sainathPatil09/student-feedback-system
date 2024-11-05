@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 const AdminSignup = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [branch, setBranch] = useState("");
   const [password, setPassword] = useState("");
   const [accessKey, setAccessKey] = useState("");
@@ -20,6 +21,7 @@ const AdminSignup = () => {
       const { data } =await axios.post("/api/adminSignup", {
         fullName,
         email,
+        role,
         branch,
         password,
         accessKey,
@@ -28,6 +30,7 @@ const AdminSignup = () => {
       console.log(data);
       setFullName("");
       setEmail("")
+      setRole("")
       setBranch("")
       setPassword("")
       setAccessKey("")
@@ -94,6 +97,32 @@ const AdminSignup = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+              </div>
+            </div>
+
+            {/* role */}
+            <div>
+              <label
+                htmlFor="role"
+                className="block text-sm font-medium leading-6 "
+              >
+                Role
+              </label>
+              <div className="mt-2">
+                <select
+                  name=""
+                  required
+                  id=""
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
+                >
+                  <option value="select">select</option>
+                  <option value="Student">Student</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Coordinator">Coordinator</option>
+                  <option value="Faculty">Faculty</option>
+                </select>
               </div>
             </div>
 

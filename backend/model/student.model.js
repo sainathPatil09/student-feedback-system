@@ -10,6 +10,11 @@ const studentSchema = new mongoose.Schema({
         require:true,
         unique:true,
     },
+    role:{
+        type:String,
+        require:true,
+        enum:["Student", "Admin", "Coordirator", "Faculty"]
+    },
     branch:{
         type:String,
         require:true,

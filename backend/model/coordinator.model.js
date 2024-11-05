@@ -10,6 +10,11 @@ const coordinatorSchema = new mongoose.Schema({
     require: true,
     unique: true,
   },
+  role: {
+    type: String,
+    require: true,
+    enum: ["Student", "Admin", "Coordirator", "Faculty"],
+  },
   coordinatorBranch: {
     type: String,
     require: true,
@@ -19,10 +24,13 @@ const coordinatorSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  coordinatorAccessKey:{
+  coordinatorAccessKey: {
     type: String,
     require: true,
-  }
+  },
 });
 
-export const coordinatorModel = new mongoose.model("Coordinator", coordinatorSchema);
+export const coordinatorModel = new mongoose.model(
+  "Coordinator",
+  coordinatorSchema
+);

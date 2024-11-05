@@ -9,7 +9,7 @@ const getUserFromToken = (req, res) => {
         // Verify and decode the token
         const decoded = jwt.verify(token, process.env.JWT_TOKEN);
         console.log(decoded , " in authController")
-        res.json({ user: decoded });  // Send decoded user data to client
+        res.json({ user: { id: decoded.userId, role: decoded.role } });  // Send decoded user data to client
     } catch (error) {
         res.status(403).json({ error: "Invalid token" });
     }

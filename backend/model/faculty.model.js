@@ -5,16 +5,23 @@ const facultySchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  facultyBranch:{
-    type:String,
-    require:true,
-    enum:["CSE"]
+  facultyBranch: {
+    type: String,
+    require: true,
+    enum: ["CSE"],
   },
-  facultyYear: { // which year faculty is taking class
+  role: {
+    type: String,
+    require: true,
+    enum: ["Student", "Admin", "Coordirator", "Faculty"],
+  },
+  facultyYear: {
+    // which year faculty is taking class
     type: String,
     require: true,
   },
-  facultyDiv: {// which Div faculty is taking class
+  facultyDiv: {
+    // which Div faculty is taking class
     type: String,
     require: true,
   },
