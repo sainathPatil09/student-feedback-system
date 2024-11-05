@@ -38,7 +38,7 @@ const CoordinatorLogin = () => {
       alert("Coordinator logged in successfully")
       console.log(data)
       setIsAuthenticated(true)
-      navigateTo('/student-pannel')
+      navigateTo('/coordinator-pannel')
 
     } catch (error) {
       alert("Error in coordinator loggin")
