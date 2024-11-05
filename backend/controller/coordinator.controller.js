@@ -206,6 +206,7 @@ export const coordinatorLogin = async (req, res) => {
       coordinatorBranch,
       coordinatorEmail,
     });
+    console.log(coordinator)
     if (!coordinator) {
       return res
         .status(400)
@@ -219,7 +220,7 @@ export const coordinatorLogin = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    createTokenAndSaveCookie(coordinator._id, res);
+    createTokenAndSaveCookie(coordinator._id, coordinator.role, res);
 
     res.status(200).json({
       message: "coordinator logged in successfully",

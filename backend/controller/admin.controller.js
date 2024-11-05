@@ -71,7 +71,7 @@ export const adminLogin = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    createTokenAndSaveCookie(admin._id, res);
+    createTokenAndSaveCookie(admin._id,admin.role, res);
     res.status(200).json({
       message: "Admin logged in successfully",
       admin: {
@@ -99,6 +99,13 @@ export const registerCoordinator = async (req, res) => {
       coordinatorPhNumber,
       coordinatorAccessKey,
     } = req.body;
+
+    console.log(coordinatorName,
+      coordinatorEmail,
+      role,
+      coordinatorBranch,
+      coordinatorPhNumber,
+      coordinatorAccessKey,)
 
     if (
       !coordinatorName ||
