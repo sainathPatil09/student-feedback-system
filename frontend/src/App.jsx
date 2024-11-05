@@ -12,6 +12,7 @@ import StudentPannel from './components/StudentPannel.jsx'
 import { useAuth } from './context/AuthProvider.jsx'
 import CoordinatorLogin from './pages/CoordinatorLogin.jsx'
 import CoordinatorPannel from './components/CoordinatorPannel.jsx'
+import FacultyAssign from './components/FacultyAssign.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -36,6 +37,7 @@ function App() {
       <Route path='/student-login' element={<StudentLogin/>}/>
       <Route path='/faculty-login' element={<FacultyLogin/>}/>
       <Route path='/coordinator-login' element={<CoordinatorLogin/>}/>
+      <Route path='/assignFaculty' element={isAuthenticated && authUser.role === "Coordinator" ? <FacultyAssign/> : <Navigate to='/'/>}/>
       <Route path='/student-pannel' element={isAuthenticated && authUser.role === "Student" ? <StudentPannel /> : <Navigate to='/'/> }/>
       <Route path='/coordinator-pannel' element={isAuthenticated && authUser.role === "Coordinator" ? <CoordinatorPannel/> : <Navigate to='/'/>}/>
       {/* <Route path='/student-pannel' element={(<StudentPannel />)}/> */}

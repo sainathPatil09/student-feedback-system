@@ -58,7 +58,7 @@ const StudentPannel = () => {
 
     try {
       const response = await axios.post('/api/feedback', {
-        studentId: authUser.userId,
+        studentId: authUser.id,
         feedback: feedbackData,
         feedbackDate: new Date().toISOString()
       });
