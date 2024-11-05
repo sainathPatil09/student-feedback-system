@@ -22,13 +22,14 @@ const StudentPannel = () => {
   const [dataN, setDataN] = useState(0);
 
   const {authUser} = useAuth()
+  // console.log(authUser)
   const [facultyList, setFacultyList] = useState([])
 
 
   useEffect(() => {
     const fetchFaculty = async () => {
-        if (authUser?.userId) {
-            const response = await fetch(`/api/faculty-assigned/${authUser.userId}`);
+        if (authUser?.id) {
+            const response = await fetch(`/api/faculty-assigned/${authUser.id}`);
             const data = await response.json();
             setFacultyList(data.faculty)
             console.log("Assigned Faculty:", data.faculty);

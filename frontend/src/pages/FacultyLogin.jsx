@@ -5,14 +5,14 @@ import axios from "axios";
 
 const FacultyLogin = () => {
   // facultyName, facultyEmail, facultyBranch, password
-  const navigateTo = useNavigate()
-  const {setIsAuthenticated} = useAuth()
+  const navigateTo = useNavigate();
+  const { setIsAuthenticated } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [branch, setBranch] = useState("");
   const [facultyAccessKey, setFacultyAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,28 +21,28 @@ const FacultyLogin = () => {
       const { data } = await axios.post("/api/loginFaculty", {
         fullName,
         email,
+        role,
         branch,
         facultyAccessKey,
       });
       console.log(data);
-      setFullName("")
+      setFullName("");
       setEmail("");
-      setBranch("")
-      setFacultyAccessKey("")
+      setRole("");
+      setBranch("");
+      setFacultyAccessKey("");
 
       localStorage.setItem("auth", JSON.stringify(data));
 
-      alert("Admin logged in successfully")
-      console.log(data)
-      setIsAuthenticated(true)
-      navigateTo('/student-pannel')
-
+      alert("Admin logged in successfully");
+      console.log(data);
+      setIsAuthenticated(true);
+      navigateTo("/student-pannel");
     } catch (error) {
-      alert("Error in loggin")
-      console.log(error)
+      alert("Error in loggin");
+      console.log(error);
     }
   };
-
 
   return (
     <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
@@ -98,6 +98,31 @@ const FacultyLogin = () => {
               </div>
             </div>
 
+            {/* role */}
+            <div>
+              <label
+                htmlFor="role"
+                className="block text-sm font-medium leading-6 "
+              >
+                Role
+              </label>
+              <div className="mt-2">
+                <select
+                  name=""
+                  required
+                  id=""
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
+                >
+                  <option value="select">select</option>
+                  <option value="Student">Student</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Coordinator">Coordinator</option>
+                  <option value="Faculty">Faculty</option>
+                </select>
+              </div>
+            </div>
             {/* branch */}
             <div>
               <label
