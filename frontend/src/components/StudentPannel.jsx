@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
+import axios from "axios";
 
 const questions = [
   'Syllabus coverage',
@@ -41,10 +42,42 @@ const StudentPannel = () => {
   const [responses, setResponses] = useState({});
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
     // Submit responses or process them as needed
+    const feedbackData = facultyList.map((faculty, facultyIndex) => ({
+      facultyId: faculty._id,
+      responses: Object.keys(responses[facultyIndex] || {}).map(questionIndex => ({
+        question: questions[questionIndex],
+        rating: responses[facultyIndex][questionIndex],
+      }))
+    }));
     console.log('Feedback submitted:', responses);
+    console.log(feedbackData);
+
+    try {
+      const response = await axios.post('/api/feedback', {
+        studentId: authUser.userId,
+        feedback: feedbackData,
+        feedbackDate: new Date().toISOString()
+      });
+      console.log(response)
+  
+      if (response.status === 200) {
+        alert("Feedback submitted successfully")
+        console.log("Feedback submitted successfully", response.data);
+        window.location.reload()
+      }
+      else if(response.status === 202){
+        window.location.reload()
+        alert("Feedback already submitted successfully")
+
+      } else {
+        console.error("Error submitting feedback:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error submitting feedback:", error.message);
+    }
   };
 
 
