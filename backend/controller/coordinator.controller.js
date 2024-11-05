@@ -14,6 +14,7 @@ export const facultyData = async (req, res) => {
     const {
       facultyName,
       facultyBranch,
+      role,
       facultyYear,
       facultyDiv,
       subject,
@@ -25,6 +26,7 @@ export const facultyData = async (req, res) => {
     if (
       !facultyName ||
       !facultyBranch ||
+      !role,
       !facultyYear ||
       !facultyDiv ||
       !subject ||
@@ -50,6 +52,7 @@ export const facultyData = async (req, res) => {
     const newFaculty = new facultyModel({
       facultyName,
       facultyBranch,
+      role,
       facultyYear,
       facultyDiv,
       subject,
@@ -117,6 +120,7 @@ export const studentData = async (req, res) => {
         studentsToInsert.push({
           fullName: student.Name,
           email: student.Email,
+          role : "Student",
           branch: student.branch,
           studentYear: student.year,
           studentDiv: student.div,
@@ -182,6 +186,7 @@ export const coordinatorLogin = async (req, res) => {
     const {
       coordinatorName,
       coordinatorEmail,
+      role,
       coordinatorBranch,
       coordinatorAccessKey,
     } = req.body;
@@ -190,6 +195,7 @@ export const coordinatorLogin = async (req, res) => {
     if (
       !coordinatorName ||
       !coordinatorEmail ||
+      !role ||
       !coordinatorBranch ||
       !coordinatorAccessKey
     ) {
@@ -220,6 +226,7 @@ export const coordinatorLogin = async (req, res) => {
       coordinator: {
         _id: coordinator._id,
         email: coordinator.coordinatorEmail,
+        role: coordinator.role,
         branch: coordinator.coordinatorBranch,
       },
     });

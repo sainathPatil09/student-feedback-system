@@ -8,10 +8,10 @@ import createTokenAndSaveCookie from "../jwt/generateToken.js";
 export const adminSignup = async (req, res) => {
   // console.log("adminSignup route")
   try {
-    const { fullName, email, branch, password, accessKey:accessCode } = req.body;
-    console.log(fullName, email, branch, password, accessCode);
+    const { fullName, email, branch,role, password, accessKey:accessCode } = req.body;
+    console.log(fullName, email, branch,role, password, accessCode);
 
-    if (!fullName || !email || !branch || !password || !accessCode) {
+    if (!fullName || !email || !branch || !role || !password || !accessCode) {
       return res.status(400).json({ message: "Please fill required fields" });
     }
 
@@ -31,6 +31,7 @@ export const adminSignup = async (req, res) => {
     const newAdmin = new adminModel({
       fullName,
       email,
+      role,
       branch,
       password: hashPassword,
     });
@@ -52,10 +53,10 @@ export const adminLogin = async (req, res) => {
   // console.log("this is adminLogin route");
 
   try {
-    const { email, branch, password } = req.body;
+    const { email,role, branch, password } = req.body;
     // console.log(fullName, email, branch)
 
-    if (!email || !branch || !password) {
+    if (!email || !role || !branch || !password) {
       return res.status(400).json({ message: "Please fill required fields" });
     }
 
@@ -76,6 +77,7 @@ export const adminLogin = async (req, res) => {
       admin: {
         _id: admin._id,
         email: admin.email,
+        role: admin.role,
         branch: admin.branch,
       },
     });
@@ -92,6 +94,7 @@ export const registerCoordinator = async (req, res) => {
     const {
       coordinatorName,
       coordinatorEmail,
+      role,
       coordinatorBranch,
       coordinatorPhNumber,
       coordinatorAccessKey,
@@ -100,6 +103,7 @@ export const registerCoordinator = async (req, res) => {
     if (
       !coordinatorName ||
       !coordinatorEmail ||
+      !role,
       !coordinatorBranch ||
       !coordinatorPhNumber ||
       !coordinatorAccessKey
@@ -117,6 +121,7 @@ export const registerCoordinator = async (req, res) => {
     const newCoordinator = new coordinatorModel({
       coordinatorName,
       coordinatorEmail,
+      role,
       coordinatorBranch,
       coordinatorPhNumber,
       coordinatorAccessKey,

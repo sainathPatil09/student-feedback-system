@@ -10,6 +10,7 @@ export const studentLogin = async (req, res) => {
       fullName,
       email,
       branch,
+      role,
       year: studentYear,
       div: studentDiv,
       usn,
@@ -22,6 +23,7 @@ export const studentLogin = async (req, res) => {
       email,
       usn,
       branch,
+      role,
       studentYear,
       studentDiv,
     });
@@ -42,7 +44,7 @@ export const studentLogin = async (req, res) => {
       return res.status(401).json({ message: "Invalid or expired access key" });
     }
 
-    createTokenAndSaveCookie(student._id, res);
+    createTokenAndSaveCookie(student._id,student.role, res);
     //filter faculty data of student year and div
     const facultyList = await facultyModel.find({
       facultyYear: studentYear,

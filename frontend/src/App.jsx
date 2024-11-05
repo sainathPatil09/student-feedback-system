@@ -36,7 +36,7 @@ function App() {
       <Route path='/student-login' element={<StudentLogin/>}/>
       <Route path='/faculty-login' element={<FacultyLogin/>}/>
       <Route path='/coordinator-login' element={<CoordinatorLogin/>}/>
-      <Route path='/student-pannel' element={isAuthenticated ? <StudentPannel /> : <Navigate to='/'/> }/>
+      <Route path='/student-pannel' element={isAuthenticated && authUser.role === "Student" ? <StudentPannel /> : <Navigate to='/'/> }/>
       <Route path='/coordinator-pannel' element={isAuthenticated ? <CoordinatorPannel/> : <Navigate to='/'/>}/>
       {/* <Route path='/student-pannel' element={(<StudentPannel />)}/> */}
     </Routes>

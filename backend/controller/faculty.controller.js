@@ -1,6 +1,6 @@
 export const loginFaculty = (req, res) => {
   try {
-    const { fullName:facultyName, email:facultyEmail, branch:facultyBranch, facultyAccessKey:password } = req.body;
+    const { fullName:facultyName, email:facultyEmail, role, branch:facultyBranch, facultyAccessKey:password } = req.body;
     // console.log(facultyName, facultyEmail, facultyBranch, password);
 
     if (password !== process.env.ACCESS_KEY_FACULTY) {
