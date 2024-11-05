@@ -12,21 +12,27 @@ export const facultyData = async (req, res) => {
   //   console.log("This facultyData");
   try {
     const {
-      facultyName,
+      fullName:facultyName,
+      branch:facultyBranch,
+      // role,
+      year:facultyYear,
+      div:facultyDiv,
+      subject,
+      email:facultyEmail,
+      phNumber:facultyPhNumber,
+    } = req.body;
+    console.log( facultyName,
       facultyBranch,
-      role,
+      // role,
       facultyYear,
       facultyDiv,
       subject,
       facultyEmail,
-      facultyPhNumber,
-    } = req.body;
-    // console.log(fullName, email, branch, password, accessCode);
+      facultyPhNumber);
 
     if (
       !facultyName ||
       !facultyBranch ||
-      !role,
       !facultyYear ||
       !facultyDiv ||
       !subject ||
@@ -52,7 +58,6 @@ export const facultyData = async (req, res) => {
     const newFaculty = new facultyModel({
       facultyName,
       facultyBranch,
-      role,
       facultyYear,
       facultyDiv,
       subject,
