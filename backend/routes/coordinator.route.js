@@ -1,7 +1,16 @@
 import express from "express";
 import multer from "multer";
-import { addStudentDataManual, coordinatorLogin, facultyData, generateAccessKey, resetFeedbackStatus, studentData } from "../controller/coordinator.controller.js";
-import { protectedRouteCoordinator} from "../middleware.js/protectedRoute.js";
+import {
+  addStudentDataManual,
+  allFaculty,
+  allStudents,
+  coordinatorLogin,
+  facultyData,
+  generateAccessKey,
+  resetFeedbackStatus,
+  studentData,
+} from "../controller/coordinator.controller.js";
+import { protectedRouteCoordinator } from "../middleware.js/protectedRoute.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -16,10 +25,21 @@ const upload = multer({
   storage,
 });
 
-router.post("/assignFaculty",protectedRouteCoordinator, facultyData);
-router.post("/importStudent", protectedRouteCoordinator, upload.single("csvFile"), studentData);
-router.post('/generate-key', protectedRouteCoordinator, generateAccessKey);
-router.post('/addStudent', protectedRouteCoordinator, addStudentDataManual);
-router.put('/resetFeedbackStatus',protectedRouteCoordinator, resetFeedbackStatus )
-router.post('/coordinatorlogin', coordinatorLogin )
-export default router
+router.post("/assignFaculty", protectedRouteCoordinator, facultyData);
+router.post(
+  "/importStudent",
+  protectedRouteCoordinator,
+  upload.single("csvFile"),
+  studentData
+);
+router.post("/generate-key", protectedRouteCoordinator, generateAccessKey);
+router.post("/addStudent", protectedRouteCoordinator, addStudentDataManual);
+router.post("/viewStudent", protectedRouteCoordinator, allStudents);
+router.post("/viewFaculty", protectedRouteCoordinator, allFaculty);
+router.put(
+  "/resetFeedbackStatus",
+  protectedRouteCoordinator,
+  resetFeedbackStatus
+);
+router.post("/coordinatorlogin", coordinatorLogin);
+export default router;

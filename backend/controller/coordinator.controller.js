@@ -12,23 +12,25 @@ export const facultyData = async (req, res) => {
   //   console.log("This facultyData");
   try {
     const {
-      fullName:facultyName,
-      branch:facultyBranch,
+      fullName: facultyName,
+      branch: facultyBranch,
       // role,
-      year:facultyYear,
-      div:facultyDiv,
+      year: facultyYear,
+      div: facultyDiv,
       subject,
-      email:facultyEmail,
-      phNumber:facultyPhNumber,
+      email: facultyEmail,
+      phNumber: facultyPhNumber,
     } = req.body;
-    console.log( facultyName,
+    console.log(
+      facultyName,
       facultyBranch,
       // role,
       facultyYear,
       facultyDiv,
       subject,
       facultyEmail,
-      facultyPhNumber);
+      facultyPhNumber
+    );
 
     if (
       !facultyName ||
@@ -125,7 +127,7 @@ export const studentData = async (req, res) => {
         studentsToInsert.push({
           fullName: student.Name,
           email: student.Email,
-          role : "Student",
+          role: "Student",
           branch: student.branch,
           studentYear: student.year,
           studentDiv: student.div,
@@ -151,12 +153,22 @@ export const studentData = async (req, res) => {
 //coordinator will add student manually
 export const addStudentDataManual = async (req, res) => {
   try {
-    const { fullName, email, branch, year:studentYear, div:studentDiv, usn, phNumber } = req.body;
+    const {
+      fullName,
+      email,
+      branch,
+      year: studentYear,
+      div: studentDiv,
+      usn,
+      phNumber,
+    } = req.body;
     // console.log(fullName, email, branch, studentYear, studentDiv, usn, phNumber)
     // Check if student already exists based on 'usn'
     const exists = await studentModel.findOne({ usn });
     if (exists) {
-      return res.status(400).send({ message: "Student with this USN already exists" });
+      return res
+        .status(400)
+        .send({ message: "Student with this USN already exists" });
     }
 
     // Create new student record
@@ -180,7 +192,6 @@ export const addStudentDataManual = async (req, res) => {
     res.status(500).send({ error: "Failed to add student data" });
   }
 };
-
 
 export const generateAccessKey = async (req, res) => {
   try {
@@ -245,13 +256,11 @@ export const coordinatorLogin = async (req, res) => {
       coordinatorBranch,
       coordinatorEmail,
     });
-    console.log(coordinator)
+    console.log(coordinator);
     if (!coordinator) {
-      return res
-        .status(400)
-        .json({
-          message: `coordinator don't exist for ${coordinatorBranch} branch`,
-        });
+      return res.status(400).json({
+        message: `coordinator don't exist for ${coordinatorBranch} branch`,
+      });
     }
 
     //check password by bcyrpt.js
@@ -272,6 +281,46 @@ export const coordinatorLogin = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in coordinator Login ", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+//view Students
+
+export const allStudents = async (req, res) => {
+  try {
+    const { branch, year: studentYear, div: studentDiv } = req.body;
+    console.log(branch, studentYear, studentDiv);
+
+    const student = await studentModel.find({
+      branch,
+      studentYear,
+      studentDiv,
+    });
+    res.status(200).json({ message: "all students", student });
+  } catch (error) {
+    console.log("Error in viewing allStudent ", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const allFaculty = async (req, res) => {
+  try {
+    const {
+      branch: facultyBranch,
+      year: facultyYear,
+      div: facultyDiv,
+    } = req.body;
+    console.log(facultyBranch, facultyYear, facultyDiv);
+
+    const faculty = await facultyModel.find({
+      facultyBranch,
+      facultyYear,
+      facultyDiv,
+    });
+    res.status(200).json({ message: "all faculty", faculty });
+  } catch (error) {
+    console.log("Error in viewing allFaculty ", error);
     return res.status(500).json({ error: "Server error" });
   }
 };
