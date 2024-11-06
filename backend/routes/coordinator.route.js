@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { coordinatorLogin, facultyData, generateAccessKey, resetFeedbackStatus, studentData } from "../controller/coordinator.controller.js";
+import { addStudentDataManual, coordinatorLogin, facultyData, generateAccessKey, resetFeedbackStatus, studentData } from "../controller/coordinator.controller.js";
 import { protectedRouteCoordinator} from "../middleware.js/protectedRoute.js";
 const router = express.Router();
 
@@ -19,6 +19,7 @@ const upload = multer({
 router.post("/assignFaculty",protectedRouteCoordinator, facultyData);
 router.post("/importStudent", protectedRouteCoordinator, upload.single("csvFile"), studentData);
 router.post('/generate-key', protectedRouteCoordinator, generateAccessKey);
+router.post('/addStudent', protectedRouteCoordinator, addStudentDataManual);
 router.put('/resetFeedbackStatus',protectedRouteCoordinator, resetFeedbackStatus )
 router.post('/coordinatorlogin', coordinatorLogin )
 export default router
