@@ -17,6 +17,7 @@ import StudentAdd from './components/StudentAdd.jsx'
 import AllStudents from './components/AllStudents.jsx'
 import AllFaculty from './components/AllFaculty.jsx'
 import ImportStudent from './components/ImportStudent.jsx'
+import AdminPannel from './components/AdminPannel.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -41,6 +42,7 @@ function App() {
       <Route path='/student-login' element={<StudentLogin/>}/>
       <Route path='/faculty-login' element={<FacultyLogin/>}/>
       <Route path='/coordinator-login' element={<CoordinatorLogin/>}/>
+      <Route path='/admin-pannel' element={isAuthenticated && authUser.role === "Admin" ? <AdminPannel/> : <Navigate to='/'/> }/>
       <Route path='/assignFaculty' element={isAuthenticated && authUser.role === "Coordinator" ? <FacultyAssign/> : <Navigate to='/'/>}/>
       <Route path='/addStudent' element={isAuthenticated && authUser.role === "Coordinator" ? <StudentAdd/> : <Navigate to='/'/>}/>
       <Route path='/importStudent' element={isAuthenticated && authUser.role === "Coordinator" ? <ImportStudent/> : <Navigate to='/'/>}/>
