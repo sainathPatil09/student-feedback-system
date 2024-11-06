@@ -61,7 +61,7 @@ const AdminSignup = () => {
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={handleSignup} method="POST" className="space-y-6">
+          <form onSubmit={handleSignup} method="POST" className="space-y-3">
             {/* fullName */}
             <div>
               <label

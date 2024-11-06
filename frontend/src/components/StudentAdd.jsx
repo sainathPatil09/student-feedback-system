@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const StudentAdd = () => {
   const [fullName, setFullName] = useState("");
@@ -42,7 +43,7 @@ const StudentAdd = () => {
   };
 
   return (
-    <div className="shadow-xl border md:w-[30%] mx-auto mt-10">
+    <div className="shadow-xl border md:w-[30%] mx-auto mt-8">
       <div className="flex min-h-full flex-1 flex-col justify-center px-12 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           {/* <img
@@ -56,7 +57,7 @@ const StudentAdd = () => {
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={handleSubmit} method="POST" className="space-y-3">
+          <form onSubmit={handleSubmit} method="POST" className="space-y-2">
             {/* fullName */}
             <div>
               <label
@@ -234,6 +235,16 @@ const StudentAdd = () => {
               </button>
             </div>
           </form>
+
+          <p className="mt-2 text-center text-sm text-gray-500">
+            
+            <Link
+              to={"/importStudent"}
+              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+            >
+              import file
+            </Link>
+          </p>
         </div>
       </div>
     </div>
