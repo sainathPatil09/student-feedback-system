@@ -290,7 +290,7 @@ export const coordinatorLogin = async (req, res) => {
 export const allStudents = async (req, res) => {
   try {
     const { branch, year: studentYear, div: studentDiv } = req.body;
-    console.log(branch, studentYear, studentDiv);
+    // console.log(branch, studentYear, studentDiv);
 
     const student = await studentModel.find({
       branch,
@@ -311,7 +311,7 @@ export const allFaculty = async (req, res) => {
       year: facultyYear,
       div: facultyDiv,
     } = req.body;
-    console.log(facultyBranch, facultyYear, facultyDiv);
+    // console.log(facultyBranch, facultyYear, facultyDiv);
 
     const faculty = await facultyModel.find({
       facultyBranch,

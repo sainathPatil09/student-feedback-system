@@ -14,6 +14,8 @@ import CoordinatorLogin from './pages/CoordinatorLogin.jsx'
 import CoordinatorPannel from './components/CoordinatorPannel.jsx'
 import FacultyAssign from './components/FacultyAssign.jsx'
 import StudentAdd from './components/StudentAdd.jsx'
+import AllStudents from './components/AllStudents.jsx'
+import AllFaculty from './components/AllFaculty.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -40,6 +42,8 @@ function App() {
       <Route path='/coordinator-login' element={<CoordinatorLogin/>}/>
       <Route path='/assignFaculty' element={isAuthenticated && authUser.role === "Coordinator" ? <FacultyAssign/> : <Navigate to='/'/>}/>
       <Route path='/addStudent' element={isAuthenticated && authUser.role === "Coordinator" ? <StudentAdd/> : <Navigate to='/'/>}/>
+      <Route path='/all-student' element={isAuthenticated && authUser.role === "Coordinator" ? <AllStudents/> : <Navigate to='/'/>}/>
+      <Route path='/all-faculty' element={isAuthenticated && authUser.role === "Coordinator" ? <AllFaculty/> : <Navigate to='/'/>}/>
       <Route path='/student-pannel' element={isAuthenticated && authUser.role === "Student" ? <StudentPannel /> : <Navigate to='/'/> }/>
       <Route path='/coordinator-pannel' element={isAuthenticated && authUser.role === "Coordinator" ? <CoordinatorPannel/> : <Navigate to='/'/>}/>
       {/* <Route path='/student-pannel' element={(<StudentPannel />)}/> */}
