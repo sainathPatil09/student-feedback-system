@@ -34,7 +34,7 @@ const AdminLogin = () => {
       alert("Admin logged in successfully")
       console.log(data)
       setIsAuthenticated(true)
-      navigateTo('/student-pannel')
+      navigateTo('/admin-pannel')
 
     } catch (error) {
       alert("Error in loggin")
