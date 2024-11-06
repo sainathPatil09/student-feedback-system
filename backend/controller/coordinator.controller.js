@@ -148,6 +148,40 @@ export const studentData = async (req, res) => {
   }
 };
 
+//coordinator will add student manually
+export const addStudentDataManual = async (req, res) => {
+  try {
+    const { fullName, email, branch, year:studentYear, div:studentDiv, usn, phNumber } = req.body;
+    // console.log(fullName, email, branch, studentYear, studentDiv, usn, phNumber)
+    // Check if student already exists based on 'usn'
+    const exists = await studentModel.findOne({ usn });
+    if (exists) {
+      return res.status(400).send({ message: "Student with this USN already exists" });
+    }
+
+    // Create new student record
+    const newStudent = new studentModel({
+      fullName,
+      email,
+      role: "Student",
+      branch,
+      studentYear,
+      studentDiv,
+      usn,
+      phNumber,
+      feedbackGiven: false,
+    });
+
+    // Save to database
+    const savedStudent = await newStudent.save();
+    res.send(savedStudent);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Failed to add student data" });
+  }
+};
+
+
 export const generateAccessKey = async (req, res) => {
   try {
     // Generate a random access key
