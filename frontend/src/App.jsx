@@ -19,6 +19,8 @@ import AllFaculty from './components/AllFaculty.jsx'
 import ImportStudent from './components/ImportStudent.jsx'
 import AdminPannel from './components/AdminPannel.jsx'
 import Feedbacks from './components/Feedbacks.jsx'
+import PDF from './components/PDF.jsx'
+import { FeedbackProvider } from './context/FeedbackProvider.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -34,6 +36,8 @@ function App() {
     <>
      {/* <Home/> */}
     {/* <AdminSignup/> */}
+    <FeedbackProvider>
+
     
     <Routes>
 
@@ -45,6 +49,7 @@ function App() {
       <Route path='/coordinator-login' element={<CoordinatorLogin/>}/>
       <Route path='/admin-pannel' element={isAuthenticated && authUser.role === "Admin" ? <AdminPannel/> : <Navigate to='/'/> }/>
       <Route path='/view-feedback' element={isAuthenticated && authUser.role === "Admin" ? <Feedbacks/> : <Navigate to='/'/> }/>
+      <Route path='/pdf' element={isAuthenticated && authUser.role === "Admin" ? <PDF/> : <Navigate to='/'/> }/>
       <Route path='/assignFaculty' element={isAuthenticated && authUser.role === "Coordinator" ? <FacultyAssign/> : <Navigate to='/'/>}/>
       <Route path='/addStudent' element={isAuthenticated && authUser.role === "Coordinator" ? <StudentAdd/> : <Navigate to='/'/>}/>
       <Route path='/importStudent' element={isAuthenticated && authUser.role === "Coordinator" ? <ImportStudent/> : <Navigate to='/'/>}/>
@@ -54,6 +59,7 @@ function App() {
       <Route path='/coordinator-pannel' element={isAuthenticated && authUser.role === "Coordinator" ? <CoordinatorPannel/> : <Navigate to='/'/>}/>
       {/* <Route path='/student-pannel' element={(<StudentPannel />)}/> */}
     </Routes>
+    </FeedbackProvider>
     </>
   )
 }
