@@ -1,5 +1,5 @@
 import express from 'express'
-import { adminLogin, adminSignup, registerCoordinator } from '../controller/admin.controller.js'
+import { adminLogin, adminSignup, registerCoordinator, viewFeedback } from '../controller/admin.controller.js'
 // import multer from 'multer'
 
 const router = express.Router()
@@ -20,5 +20,6 @@ router.post("/adminSignup", adminSignup)
 // router.post("/assignFaculty", facultyData)
 router.post("/registerCoordinator", registerCoordinator )
 // router.post("/importStudent", upload.single("csvFile"), studentData)
+router.post('/getFeedback', viewFeedback)
 
 export default router
