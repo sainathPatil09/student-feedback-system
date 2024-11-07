@@ -3,13 +3,22 @@ import bcrypt from "bcryptjs";
 // import dotenv from "dotenv";
 import { coordinatorModel } from "../model/coordinator.model.js";
 import createTokenAndSaveCookie from "../jwt/generateToken.js";
+import { facultyModel } from "../model/faculty.model.js";
+import { Feedback } from "../model/feedback.model.js";
 
 // admin signup
 export const adminSignup = async (req, res) => {
   // console.log("adminSignup route")
   try {
-    const { fullName, email, branch,role, password, accessKey:accessCode } = req.body;
-    console.log(fullName, email, branch,role, password, accessCode);
+    const {
+      fullName,
+      email,
+      branch,
+      role,
+      password,
+      accessKey: accessCode,
+    } = req.body;
+    console.log(fullName, email, branch, role, password, accessCode);
 
     if (!fullName || !email || !branch || !role || !password || !accessCode) {
       return res.status(400).json({ message: "Please fill required fields" });
@@ -39,7 +48,7 @@ export const adminSignup = async (req, res) => {
     await newAdmin.save();
 
     if (newAdmin) {
-      console.log(newAdmin)
+      console.log(newAdmin);
       res.status(200).json({ message: "New Admin Created", newAdmin });
     }
   } catch (error) {
@@ -53,8 +62,8 @@ export const adminLogin = async (req, res) => {
   // console.log("this is adminLogin route");
 
   try {
-    const { email,role, branch, password } = req.body;
-    // console.log(fullName, email, branch)
+    const { email, role, branch, password } = req.body;
+    console.log(fullName, email, branch)
 
     if (!email || !role || !branch || !password) {
       return res.status(400).json({ message: "Please fill required fields" });
@@ -71,7 +80,7 @@ export const adminLogin = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    createTokenAndSaveCookie(admin._id,admin.role, res);
+    createTokenAndSaveCookie(admin._id, admin.role, res);
     res.status(200).json({
       message: "Admin logged in successfully",
       admin: {
@@ -100,20 +109,18 @@ export const registerCoordinator = async (req, res) => {
       coordinatorAccessKey,
     } = req.body;
 
-    console.log(coordinatorName,
+    console.log(
+      coordinatorName,
       coordinatorEmail,
       role,
       coordinatorBranch,
       coordinatorPhNumber,
-      coordinatorAccessKey,)
+      coordinatorAccessKey
+    );
 
     if (
-      !coordinatorName ||
-      !coordinatorEmail ||
-      !role,
-      !coordinatorBranch ||
-      !coordinatorPhNumber ||
-      !coordinatorAccessKey
+      (!coordinatorName || !coordinatorEmail || !role,
+      !coordinatorBranch || !coordinatorPhNumber || !coordinatorAccessKey)
     ) {
       return res.status(400).json({ message: "Please fill required fields" });
     }
@@ -122,7 +129,9 @@ export const registerCoordinator = async (req, res) => {
     if (coordinator) {
       return res
         .status(400)
-        .json({ message: `coordinator already exist for ${coordinatorBranch} branch` });
+        .json({
+          message: `coordinator already exist for ${coordinatorBranch} branch`,
+        });
     }
 
     const newCoordinator = new coordinatorModel({
@@ -146,3 +155,76 @@ export const registerCoordinator = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
+
+export const viewFeedback = async (req, res) => {
+  try {
+    const { year:facultyYear, div:facultyDiv, branch:facultyBranch } = req.body;
+    // console.log(facultyYear, facultyDiv, facultyBranch)
+    // Fetch all faculty members for the given year and division
+    const facultyList = await facultyModel.find({ facultyYear, facultyDiv, facultyBranch }).select(
+      "_id facultyName subject"
+    );
+    // console.log(facultyList)
+    const facultyIds = facultyList.map((faculty) => faculty._id);
+    // console.log(facultyIds, "facultyIds")
+    // Fetch feedback for all faculty in that list
+    const feedback = await Feedback.find({ facultyId: { $in: facultyIds } })
+      // .populate("studentId", "fullName")
+      // .populate("facultyId", "name subject");
+      
+      // Calculate average ratings for each question per faculty
+      const feedbackData = facultyList.map((faculty) => {
+        const facultyFeedback = feedback.filter(
+          (f) => f.facultyId._id.toString() === faculty._id.toString()
+        );
+        
+
+      // Calculate averages for each question
+      const questionAverages = {};
+      facultyFeedback.forEach((f) => {
+        f.responses.forEach(({ question, rating }) => {
+          if (!questionAverages[question]) {
+            questionAverages[question] = { total: 0, count: 0 };
+          }
+          // Convert rating to numerical value if needed
+          const numericalRating = convertRatingToNumber(rating);
+          questionAverages[question].total += numericalRating;
+          questionAverages[question].count += 1;
+        });
+      });
+
+      // Calculate average for each question
+      const averages = Object.keys(questionAverages).map((question) => ({
+        question,
+        averageRating: (
+          questionAverages[question].total / questionAverages[question].count
+        ).toFixed(2),
+      }));
+
+      return {
+        facultyId: faculty._id,
+        facultyName: faculty.facultyName,
+        subject: faculty.subject,
+        averageRatings: averages,
+      };
+    }
+  );
+  
+    // console.log(feedbackData, "feedback")
+    res.status(200).json(feedbackData );
+  } catch (error) {
+    console.error("Error fetching feedback:", error);
+    res.status(500).json({ message: "Error fetching feedback" });
+  }
+};
+
+
+function convertRatingToNumber(rating) {
+  const ratingMap = {
+    "Poor": 1,
+    "Medium": 2,
+    "Good": 3,
+    "Very good": 5,
+  };
+  return ratingMap[rating] || 0; // Defaults to 0 if rating is invalid
+}
