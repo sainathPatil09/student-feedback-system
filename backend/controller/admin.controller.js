@@ -201,11 +201,15 @@ export const viewFeedback = async (req, res) => {
         ).toFixed(2),
       }));
 
+      const totalRatings = averages.reduce((sum, { averageRating }) => sum + parseFloat(averageRating), 0);
+      const overallAverageRating = (totalRatings / averages.length).toFixed(2);
+
       return {
         facultyId: faculty._id,
         facultyName: faculty.facultyName,
         subject: faculty.subject,
         averageRatings: averages,
+        overallAverageRating
       };
     }
   );
