@@ -3,7 +3,7 @@ import React from "react";
 const Table = ({ feedback }) => {
   console.log(feedback);
   return (
-    <table className="table-auto w-full mb-5  border-collapse mx-auto">
+    <table className="table-auto w-full mb-3  border-collapse mx-auto">
       <thead>
         <tr className="bg-gray-100 border-b border-gray-300">
           <th className="px-4 py-2 text-left font-bold text-gray-700">Name</th>
@@ -51,11 +51,14 @@ const Table = ({ feedback }) => {
               <td className="px-4 py-2">
                 {feed.averageRatings[5].averageRating}
               </td>
+              <td className="px-4 py-2">
+                {feed.overallAverageRating}
+              </td>
             </tr>
           );
         })}
 
-        {/* <tr className="bg-gray-50 hover:bg-gray-100">
+        <tr className="bg-gray-50 hover:bg-gray-100">
             <td className="px-4 py-2">2</td>
             <td className="px-4 py-2">Hart Hagerty</td>
             <td className="px-4 py-2">hee</td>
@@ -84,7 +87,7 @@ const Table = ({ feedback }) => {
             <td className="px-4 py-2">Brice Swyre</td>
             <td className="px-4 py-2">Software Engineer</td>
             <td className="px-4 py-2">Yellow</td>
-          </tr> */}
+          </tr>
       </tbody>
     </table>
   );
