@@ -63,7 +63,7 @@ export const adminLogin = async (req, res) => {
 
   try {
     const { email, role, branch, password } = req.body;
-    console.log(fullName, email, branch)
+    // console.log(email, role, branch, password )
 
     if (!email || !role || !branch || !password) {
       return res.status(400).json({ message: "Please fill required fields" });
