@@ -157,12 +157,12 @@ export const addStudentDataManual = async (req, res) => {
       fullName,
       email,
       branch,
-      year: studentYear,
-      div: studentDiv,
+      studentYear,
+      studentDiv,
       usn,
       phNumber,
     } = req.body;
-    // console.log(fullName, email, branch, studentYear, studentDiv, usn, phNumber)
+    console.log(fullName, email, branch, studentYear, studentDiv, usn, phNumber)
     // Check if student already exists based on 'usn'
     const exists = await studentModel.findOne({ usn });
     if (exists) {

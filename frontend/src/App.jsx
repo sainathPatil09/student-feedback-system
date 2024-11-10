@@ -21,6 +21,7 @@ import AdminPannel from './components/AdminPannel.jsx'
 import Feedbacks from './components/Feedbacks.jsx'
 import PDF from './components/PDF.jsx'
 import { FeedbackProvider } from './context/FeedbackProvider.jsx'
+import Verify from './pages/Verify.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -46,6 +47,7 @@ function App() {
       <Route path='/admin-login' element={<AdminLogin/>}/>
       <Route path='/student-login' element={<StudentLogin/>}/>
       <Route path='/faculty-login' element={<FacultyLogin/>}/>
+      <Route path='/verifyOTP' element={<Verify/>}/>
       <Route path='/coordinator-login' element={<CoordinatorLogin/>}/>
       <Route path='/admin-pannel' element={isAuthenticated && authUser.role === "Admin" ? <AdminPannel/> : <Navigate to='/'/> }/>
       <Route path='/view-feedback' element={isAuthenticated && authUser.role === "Admin" ? <Feedbacks/> : <Navigate to='/'/> }/>
