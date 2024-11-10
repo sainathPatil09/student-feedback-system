@@ -7,8 +7,8 @@ const StudentAdd = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [branch, setBranch] = useState("");
-  const [year, setYear] = useState("");
-  const [div, setDiv] = useState("");
+  const [studentYear, setStudentYear] = useState("");
+  const [studentDiv, setStudentDiv] = useState("");
   const [usn, setUsn] = useState("");
   const [phNumber, setPhNumber] = useState("");
 
@@ -21,8 +21,8 @@ const StudentAdd = () => {
         email,
         role,
         branch,
-        year,
-        div,
+        studentYear,
+        studentDiv,
         usn,
         phNumber,
       });
@@ -31,8 +31,8 @@ const StudentAdd = () => {
       setEmail("");
       setRole("")
       setBranch("");
-      setYear("");
-      setDiv("");
+      setStudentYear("");
+      setStudentDiv("");
       setUsn("");
       setPhNumber("");
       alert("Student added successfully");
@@ -161,8 +161,8 @@ const StudentAdd = () => {
                     type="text"
                     required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
+                    value={studentYear}
+                    onChange={(e) => setStudentYear(e.target.value)}
                   />
                 </div>
               </div>
@@ -180,8 +180,8 @@ const StudentAdd = () => {
                     type="text"
                     required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
-                    value={div}
-                    onChange={(e) => setDiv(e.target.value)}
+                    value={studentDiv}
+                    onChange={(e) => setStudentDiv(e.target.value)}
                   />
                 </div>
               </div>

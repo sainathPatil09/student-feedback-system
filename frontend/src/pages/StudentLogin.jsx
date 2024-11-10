@@ -9,8 +9,8 @@ const StudentLogin = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [branch, setBranch] = useState("");
-  const [year, setYear] = useState("");
-  const [div, setDiv] = useState("");
+  const [studentYear, setStudentYear] = useState("");
+  const [studentDiv, setStudentDiv] = useState("");
   const [usn, setUsn] = useState("");
   const [studentAccessKey, setstudentAccessKey] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -23,32 +23,38 @@ const StudentLogin = () => {
     e.preventDefault();
 
     try {
+      // console.log(fullName,
+      //   email,
+      //   role,
+      //   branch,
+      //   year,
+      //   div,
+      //   usn,
+      //   studentAccessKey)
       const { data } = await axios.post("/api/studentLogin", {
         fullName,
         email,
         role,
         branch,
-        year,
-        div,
+        studentYear,
+        studentDiv,
         usn,
         studentAccessKey,
       });
+      
       console.log(data);
       setFullName("");
       setBranch("")
       setRole("")
       setEmail("");
-      setYear("")
-      setDiv("")
+      setStudentYear("")
+      setStudentDiv("")
       setUsn("")
       setstudentAccessKey("")
 
-      localStorage.setItem("auth", JSON.stringify(data.student));
 
-      alert("Student logged in successfully")
-      console.log(data)
-      setIsAuthenticated(true)
-      navigateTo('/student-pannel')
+      alert("OTP sent to Email successfully")
+      navigateTo('/verifyOTP')
 
     } catch (error) {
       alert("Error in loggin")
@@ -173,8 +179,8 @@ const StudentLogin = () => {
                     type="text"
                     required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
+                    value={studentYear}
+                    onChange={(e) => setStudentYear(e.target.value)}
                   />
                 </div>
               </div>
@@ -192,8 +198,8 @@ const StudentLogin = () => {
                     type="text"
                     required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
-                    value={div}
-                    onChange={(e) => setDiv(e.target.value)}
+                    value={studentDiv}
+                    onChange={(e) => setStudentDiv(e.target.value)}
                   />
                 </div>
               </div>
