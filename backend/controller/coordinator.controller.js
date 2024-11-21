@@ -6,6 +6,8 @@ import xlsx from "xlsx";
 import crypto from "crypto";
 import { coordinatorModel } from "../model/coordinator.model.js";
 import createTokenAndSaveCookie from "../jwt/generateToken.js";
+import { subjectModel } from "../model/subject.model.js";
+import { courseModel } from "../model/course.model.js";
 
 //coordinator will add facultyData
 export const facultyData = async (req, res) => {
@@ -153,16 +155,17 @@ export const studentData = async (req, res) => {
 //coordinator will add student manually
 export const addStudentDataManual = async (req, res) => {
   try {
-    const {
+    const { fullName, email, branch, studentYear, studentDiv, usn, phNumber } =
+      req.body;
+    console.log(
       fullName,
       email,
       branch,
       studentYear,
       studentDiv,
       usn,
-      phNumber,
-    } = req.body;
-    console.log(fullName, email, branch, studentYear, studentDiv, usn, phNumber)
+      phNumber
+    );
     // Check if student already exists based on 'usn'
     const exists = await studentModel.findOne({ usn });
     if (exists) {
@@ -322,5 +325,99 @@ export const allFaculty = async (req, res) => {
   } catch (error) {
     console.log("Error in viewing allFaculty ", error);
     return res.status(500).json({ error: "Server error" });
+  }
+};
+
+// add subject
+export const addSubject = async (req, res) => {
+  try {
+    const { subjectName, subjectCode, branch, sem, subjectType, credits } =
+      req.body;
+
+    // console.log(subjectName, subjectCode, branch, sem, subjectType, credits);
+
+    if (
+      !subjectName ||
+      !subjectCode ||
+      !branch ||
+      !sem ||
+      !subjectType ||
+      !credits
+    ) {
+      return res.status(400).json({ message: "Please fill required fields" });
+    }
+
+    const exists = await subjectModel.findOne({ subjectCode });
+    if (exists) {
+      return res.status(400).send({ message: "This subject already exists" });
+    }
+
+    const newSubject = new subjectModel({
+      subjectName,
+      subjectCode,
+      branch,
+      sem,
+      subjectType,
+      credits,
+    });
+
+    const savedSubject = await newSubject.save();
+    res.send(savedSubject);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Failed to add subject" });
+  }
+};
+
+// add course
+export const addCourse = async (req, res) => {
+  try {
+    const { scheme, branch, sem, subjects, totalSubject } = req.body;
+    console.log(scheme, branch, sem, subjects, totalSubject);
+
+    if (!scheme || !branch || !sem || !subjects || !totalSubject) {
+      return res.status(400).json({ message: "Please fill required fields" });
+    }
+    // Find subjects by name
+    const sub = await subjectModel.find({ subjectName: { $in: subjects } });
+    console.log(sub.length);
+    if (sub.length !== subjects.length) {
+      return res
+        .status(400)
+        .send({ message: "Some subjects do not exist in the database" });
+    }
+
+    // Extract subject IDs
+    const subjectIds = sub.map((subject) => subject._id);
+
+    // Check if course exists
+    const exists = await courseModel.findOne({ scheme, branch, sem });
+    if (exists) {
+      return res.status(400).send({ message: "This course already exists" });
+    }
+
+    // Create course
+    const newCourse = await courseModel.create({
+      scheme,
+      branch,
+      sem,
+      totalSubject,
+      subjects: subjectIds,
+    });
+    
+    // Populate subjects before sending the response
+    const populatedCourse = await courseModel
+      .findById(newCourse._id)
+      .populate("subjects", "subjectName"); // Only include subjectName
+
+    res
+      .status(201)
+      .send({
+        message: "Course created successfully",
+        course: populatedCourse,
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Failed to add course" });
   }
 };

@@ -1,7 +1,9 @@
 import express from "express";
 import multer from "multer";
 import {
+  addCourse,
   addStudentDataManual,
+  addSubject,
   allFaculty,
   allStudents,
   coordinatorLogin,
@@ -41,5 +43,8 @@ router.put(
   protectedRouteCoordinator,
   resetFeedbackStatus
 );
+
+router.post("/addSubject", protectedRouteCoordinator, addSubject);
+router.post("/addCourse", protectedRouteCoordinator, addCourse);
 router.post("/coordinatorlogin", coordinatorLogin);
 export default router;
