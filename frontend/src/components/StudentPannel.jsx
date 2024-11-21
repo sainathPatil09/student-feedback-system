@@ -99,7 +99,8 @@ const StudentPannel = () => {
     <form onSubmit={handleSubmit} className="feedback-form">
       {facultyList.map((curFaculty, facultyIndex) => (
         <div className="border-2 bg-gradient-to-r from-amber-300 to-violet-400  border-red-400 mb-5 p-5 rounded-xl w-1/2 mx-auto" key={facultyIndex}>
-          <h2>{curFaculty.subject}</h2>
+          <p>{curFaculty.subject}</p>
+          <p>{curFaculty.facultyName}</p>
           <table className=" w-full">
             <thead>
               <tr>

@@ -7,12 +7,14 @@ const PDF = () => {
   console.log(feedback);
   return (
     <>
-      <div className="border border-red-300 w-3/4 mx-auto">
-        <header>
-          <img src="" alt="image" />
+      <div className="border border-red-300 w-3/4 mx-auto h-full p-5 ">
+        <header className="border">
+          <img className="h-32" src="" alt="image" />
         </header>
-        <h1>{header}</h1>
-        <h2>semester: {sem}</h2>
+        <div className="flex flex-col items-center gap-2 mt-2 mb-2">
+          <h1 className="text-3xl">{header}</h1>
+          <h2 className="text-2xl">semester: {sem}</h2>
+        </div>
 
         <Table feedback={feedback} />
 
@@ -48,7 +50,20 @@ const PDF = () => {
           </div>
         </div>
 
-        
+        <div className="flex w-3/4 mx-auto border-2 justify-between mt-32">
+          <div>
+            <p>CLASS CO_ORDINATOR</p>
+            <p>abc</p>
+          </div>
+          <div>
+            <p>HOD</p>
+            <p>pqr</p>
+          </div>
+          <div>
+            <p>PRINCIPAL</p>
+            <p>xyz</p>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -1,5 +1,6 @@
 import { adminModel } from "../model/admin.model.js";
 import bcrypt from "bcryptjs";
+import path from 'path'
 // import dotenv from "dotenv";
 import { coordinatorModel } from "../model/coordinator.model.js";
 import createTokenAndSaveCookie from "../jwt/generateToken.js";
@@ -127,11 +128,9 @@ export const registerCoordinator = async (req, res) => {
 
     const coordinator = await coordinatorModel.findOne({ coordinatorBranch });
     if (coordinator) {
-      return res
-        .status(400)
-        .json({
-          message: `coordinator already exist for ${coordinatorBranch} branch`,
-        });
+      return res.status(400).json({
+        message: `coordinator already exist for ${coordinatorBranch} branch`,
+      });
     }
 
     const newCoordinator = new coordinatorModel({
@@ -158,26 +157,29 @@ export const registerCoordinator = async (req, res) => {
 
 export const viewFeedback = async (req, res) => {
   try {
-    const { year:facultyYear, div:facultyDiv, branch:facultyBranch } = req.body;
+    const {
+      year: facultyYear,
+      div: facultyDiv,
+      branch: facultyBranch,
+    } = req.body;
     // console.log(facultyYear, facultyDiv, facultyBranch)
     // Fetch all faculty members for the given year and division
-    const facultyList = await facultyModel.find({ facultyYear, facultyDiv, facultyBranch }).select(
-      "_id facultyName subject"
-    );
+    const facultyList = await facultyModel
+      .find({ facultyYear, facultyDiv, facultyBranch })
+      .select("_id facultyName subject");
     // console.log(facultyList)
     const facultyIds = facultyList.map((faculty) => faculty._id);
     // console.log(facultyIds, "facultyIds")
     // Fetch feedback for all faculty in that list
-    const feedback = await Feedback.find({ facultyId: { $in: facultyIds } })
-      // .populate("studentId", "fullName")
-      // .populate("facultyId", "name subject");
-      
-      // Calculate average ratings for each question per faculty
-      const feedbackData = facultyList.map((faculty) => {
-        const facultyFeedback = feedback.filter(
-          (f) => f.facultyId._id.toString() === faculty._id.toString()
-        );
-        
+    const feedback = await Feedback.find({ facultyId: { $in: facultyIds } });
+    // .populate("studentId", "fullName")
+    // .populate("facultyId", "name subject");
+
+    // Calculate average ratings for each question per faculty
+    const feedbackData = facultyList.map((faculty) => {
+      const facultyFeedback = feedback.filter(
+        (f) => f.facultyId._id.toString() === faculty._id.toString()
+      );
 
       // Calculate averages for each question
       const questionAverages = {};
@@ -201,7 +203,10 @@ export const viewFeedback = async (req, res) => {
         ).toFixed(2),
       }));
 
-      const totalRatings = averages.reduce((sum, { averageRating }) => sum + parseFloat(averageRating), 0);
+      const totalRatings = averages.reduce(
+        (sum, { averageRating }) => sum + parseFloat(averageRating),
+        0
+      );
       const overallAverageRating = (totalRatings / averages.length).toFixed(2);
 
       return {
@@ -209,26 +214,56 @@ export const viewFeedback = async (req, res) => {
         facultyName: faculty.facultyName,
         subject: faculty.subject,
         averageRatings: averages,
-        overallAverageRating
+        overallAverageRating,
       };
-    }
-  );
-  
+    });
+
     // console.log(feedbackData, "feedback")
-    res.status(200).json(feedbackData );
+    res.status(200).json(feedbackData);
   } catch (error) {
     console.error("Error fetching feedback:", error);
     res.status(500).json({ message: "Error fetching feedback" });
   }
 };
 
-
 function convertRatingToNumber(rating) {
   const ratingMap = {
-    "Poor": 1,
-    "Medium": 2,
-    "Good": 3,
+    Poor: 1,
+    Medium: 2,
+    Good: 3,
     "Very good": 5,
   };
   return ratingMap[rating] || 0; // Defaults to 0 if rating is invalid
 }
+
+export const generatePDF = async (req, res) => {
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(`${req.protocol}://${req.get('host')}`+"/pdf", {
+      waitUntil : "networkidel2"
+    })
+
+    
+    page.setViewport({width: 1680, height:1050});
+    const todayDate = new Date()
+    const pdfn = await page.pdf({
+      path: `${path.join(__dirname, '../uploads/files', todayDate.getTime()+".pdf")}`,
+      formate:"A4"
+    })
+
+    await browser.close();
+
+    const pdfURL = path.join(__dirname, '../uploads/files', todayDate.getTime()+".pdf")
+
+    res.set({
+      "Content-Type":"application/pdf",
+      "content-Length" :pdfn.length
+    })
+
+    res.sendFile(pdfURL)
+
+  } catch (error) {
+    console.log(error + "error in generatingPDF")
+  }
+};
