@@ -8,6 +8,7 @@ import { coordinatorModel } from "../model/coordinator.model.js";
 import createTokenAndSaveCookie from "../jwt/generateToken.js";
 import { subjectModel } from "../model/subject.model.js";
 import { courseModel } from "../model/course.model.js";
+import { validStudentModel } from "../model/validStudent.model.js";
 
 //coordinator will add facultyData
 export const facultyData = async (req, res) => {
@@ -328,6 +329,8 @@ export const allFaculty = async (req, res) => {
   }
 };
 
+// *****************************************************
+
 // add subject
 export const addSubject = async (req, res) => {
   try {
@@ -404,20 +407,48 @@ export const addCourse = async (req, res) => {
       totalSubject,
       subjects: subjectIds,
     });
-    
+
     // Populate subjects before sending the response
     const populatedCourse = await courseModel
       .findById(newCourse._id)
       .populate("subjects", "subjectName"); // Only include subjectName
 
-    res
-      .status(201)
-      .send({
-        message: "Course created successfully",
-        course: populatedCourse,
-      });
+    res.status(201).send({
+      message: "Course created successfully",
+      course: populatedCourse,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Failed to add course" });
+  }
+};
+
+export const addValidUSN = async (req, res) => {
+  try {
+    const { usn, branch, scheme, sem, div } = req.body;
+
+    if (!usn || !branch || !scheme || !sem || !div) {
+      return res.status(400).json({ message: "Please fill required fields" });
+    }
+
+    const exist = await validStudentModel.findOne({ usn, sem });
+    if (exist) {
+      return res.status(400).json({ message: "Usn already exists" });
+    }
+
+    const validUsn = new validStudentModel({
+      usn,
+      branch,
+      scheme,
+      sem,
+      div,
+    });
+
+    await validUsn.save();
+
+    res.status(201).json({message: "Usn added successfully", validUSN: validUsn});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error in adding valid USN" });
   }
 };

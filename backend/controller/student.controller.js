@@ -5,6 +5,11 @@ import { studentModel } from "../model/student.model.js";
 import { accessKeyModel } from "../model/studentKey.model.js";
 import otpGenerator from "otp-generator";
 import sendEmail from "../utils/sendEmail.js";
+import { validStudentModel } from "../model/validStudent.model.js";
+import { courseModel } from "../model/course.model.js";
+import { subjectModel } from "../model/subject.model.js";
+import { studentModelA } from "../model/studentA.model.js";
+import bcrypt from "bcryptjs";
 
 export const studentLogin = async (req, res) => {
   try {
@@ -70,9 +75,8 @@ export const studentLogin = async (req, res) => {
 
     await sendEmail(email, "Your OTP Code", `Your OTP code is: ${otp}`);
 
-      console.log("Email sent")
-      res.status(200).json({ message: "OTP sent to registered email" });
-
+    console.log("Email sent");
+    res.status(200).json({ message: "OTP sent to registered email" });
   } catch (error) {
     console.log("Error in StudentLogin ", error);
     return res.status(500).json({ error: "Server error" });
@@ -170,5 +174,115 @@ export const verifyOtp = async (req, res) => {
   } catch (error) {
     console.error("Error during OTP verification:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const registerStudent = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      usn,
+      branch,
+      scheme,
+      sem,
+      div,
+      electives,
+      phNumber,
+    } = req.body;
+
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !usn ||
+      !branch ||
+      !scheme ||
+      !sem ||
+      !div ||
+      !electives ||
+      !phNumber
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Please fill all required fields" });
+    }
+
+    
+
+    const validStudent = await validStudentModel.findOne({ usn });
+    if (!validStudent) {
+      return res.status(400).json({ message: "Invalid USN" });
+    }
+
+    // Fetch the course for the given scheme, branch, and sem
+    const course = await courseModel
+      .findOne({ scheme, branch, sem })
+      .populate("subjects");
+    if (!course) {
+      return res.status(400).json({
+        message: "No course found for the given scheme, branch, and sem",
+      });
+    }
+
+    // Fetch core and elective subjects
+    const coreSubjects = course.subjects.filter(
+      (subject) => subject.subjectType === "Core"
+    );
+    console.log(coreSubjects)
+    console.log(electives)
+    const electiveSubjects = await subjectModel.find({
+      subjectName: { $in: electives },
+      branch,
+      sem,
+      subjectType: "Elective",
+    });
+    console.log(electiveSubjects)
+    // Validate total subjects
+    const totalSelectedSubjects = coreSubjects.length + electiveSubjects.length;
+    if (totalSelectedSubjects !== course.totalSubject) {
+      return res.status(400).json({
+        message: `Total subjects (${totalSelectedSubjects}) do not match the required total subjects (${course.totalSubject}) for the course`,
+      });
+    }
+
+    // Combine core and elective subjects
+    // const allSubjects = [
+    //   ...coreSubjects.map((subject) => subject._id),
+    //   ...electives,
+    // ];
+
+    const existingStudent = await studentModelA.findOne({ email });
+    if (existingStudent) {
+      return res.status(400).json({ message: "Student already registered with this email" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Register the student
+    const newStudent = new studentModelA({
+      name,
+      email,
+      password: hashedPassword,
+      usn,
+      branch,
+      scheme,
+      sem,
+      div,
+      phNumber,
+      coreSubjects: coreSubjects.map((subject) => subject._id),
+      electiveSubjects: electiveSubjects.map(subject => subject._id),
+    });
+
+    await newStudent.save();
+
+    res.status(201).json({
+      message: "Student registered successfully",
+      student: newStudent,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error registering student" });
   }
 };
