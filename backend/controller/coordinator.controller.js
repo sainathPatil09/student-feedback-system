@@ -9,6 +9,7 @@ import createTokenAndSaveCookie from "../jwt/generateToken.js";
 import { subjectModel } from "../model/subject.model.js";
 import { courseModel } from "../model/course.model.js";
 import { validStudentModel } from "../model/validStudent.model.js";
+import { validFacultyModel } from "../model/validFaculty.model.js";
 
 //coordinator will add facultyData
 export const facultyData = async (req, res) => {
@@ -452,3 +453,29 @@ export const addValidUSN = async (req, res) => {
     res.status(500).json({ message: "Error in adding valid USN" });
   }
 };
+
+export const addValidFacultyId = async (req, res)=>{
+  try {
+    const{fId, branch} = req.body;
+
+    if(!fId || !branch){
+      return res.status(400).json({message: "Please fill required fields"})
+    }
+
+    const exist = await validFacultyModel.findOne({ fId, branch});
+    if (exist) {
+      return res.status(400).json({ message: "faculty id already exists" });
+    }
+
+    const validFaculty = new validFacultyModel({
+      fId, branch
+    }) 
+
+    await validFaculty.save()
+
+    res.status(201).json({message: "Faculty id added successfully", validFaculty: validFaculty});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error in adding valid Faculty id" });
+  }
+}
