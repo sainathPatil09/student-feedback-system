@@ -4,6 +4,7 @@ import {
   addCourse,
   addStudentDataManual,
   addSubject,
+  addValidFacultyId,
   addValidUSN,
   allFaculty,
   allStudents,
@@ -48,5 +49,6 @@ router.put(
 router.post("/addSubject", protectedRouteCoordinator, addSubject);
 router.post("/addCourse", protectedRouteCoordinator, addCourse);
 router.post("/addValidUSN", protectedRouteCoordinator, addValidUSN);
+router.post("/addValidFID", protectedRouteCoordinator, addValidFacultyId);
 router.post("/coordinatorlogin", coordinatorLogin);
 export default router;
