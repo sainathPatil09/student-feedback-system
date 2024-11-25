@@ -209,8 +209,6 @@ export const registerStudent = async (req, res) => {
         .json({ message: "Please fill all required fields" });
     }
 
-    
-
     const validStudent = await validStudentModel.findOne({ usn });
     if (!validStudent) {
       return res.status(400).json({ message: "Invalid USN" });
@@ -230,15 +228,15 @@ export const registerStudent = async (req, res) => {
     const coreSubjects = course.subjects.filter(
       (subject) => subject.subjectType === "Core"
     );
-    console.log(coreSubjects)
-    console.log(electives)
+    console.log(coreSubjects);
+    console.log(electives);
     const electiveSubjects = await subjectModel.find({
       subjectName: { $in: electives },
       branch,
       sem,
       subjectType: "Elective",
     });
-    console.log(electiveSubjects)
+    console.log(electiveSubjects);
     // Validate total subjects
     const totalSelectedSubjects = coreSubjects.length + electiveSubjects.length;
     if (totalSelectedSubjects !== course.totalSubject) {
@@ -255,7 +253,9 @@ export const registerStudent = async (req, res) => {
 
     const existingStudent = await studentModelA.findOne({ email });
     if (existingStudent) {
-      return res.status(400).json({ message: "Student already registered with this email" });
+      return res
+        .status(400)
+        .json({ message: "Student already registered with this email" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -272,7 +272,7 @@ export const registerStudent = async (req, res) => {
       div,
       phNumber,
       coreSubjects: coreSubjects.map((subject) => subject._id),
-      electiveSubjects: electiveSubjects.map(subject => subject._id),
+      electiveSubjects: electiveSubjects.map((subject) => subject._id),
     });
 
     await newStudent.save();
@@ -284,5 +284,34 @@ export const registerStudent = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error registering student" });
+  }
+};
+
+export const loginStudent = async (req, res) => {
+  try {
+    const { email, usn, password } = req.body;
+    console.log(email, usn, password);
+
+    if (!email || !usn || !password) {
+      return res
+        .status(400)
+        .json({ message: "Please fill all required fields" });
+    }
+
+    const student = await studentModelA.findOne({ email, usn });
+    if (!student) {
+      return res.status(404).json({ message: "Student not found." });
+    }
+
+    // Compare password
+    const isPasswordValid = await bcrypt.compare(password, student.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials." });
+    }
+
+    res.status(200).json({ message: "Student Login Successfully", student });
+  } catch (error) {
+    console.error("Error during faculty login:", error.message);
+    res.status(500).json({ message: "Error logging in." });
   }
 };
