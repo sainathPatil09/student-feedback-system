@@ -380,6 +380,7 @@ export const addCourse = async (req, res) => {
     console.log(scheme, branch, sem, subjects, totalSubject);
 
     if (!scheme || !branch || !sem || !subjects || !totalSubject) {
+      console.log("hello")
       return res.status(400).json({ message: "Please fill required fields" });
     }
     // Find subjects by name
@@ -424,6 +425,29 @@ export const addCourse = async (req, res) => {
   }
 };
 
+// fetch subjects of selected sem
+export const fetchSubject = async (req, res) => {
+  const { sem } = req.params;
+
+  try {
+    const subjects =await subjectModel.find({ sem });
+    console.log("subjects")
+    console.log(subjects)
+    // If no subjects are found, return an empty array
+    if (!subjects || subjects.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No subjects found for this semester" });
+    }
+
+    // Return subjects
+    res.status(200).json(subjects.map((subject) => subject.subjectName)); // Return only subject names
+  } catch (error) {
+    console.error("Error fetching subjects:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const addValidUSN = async (req, res) => {
   try {
     const { usn, branch, scheme, sem, div } = req.body;
@@ -447,35 +471,43 @@ export const addValidUSN = async (req, res) => {
 
     await validUsn.save();
 
-    res.status(201).json({message: "Usn added successfully", validUSN: validUsn});
+    res
+      .status(201)
+      .json({ message: "Usn added successfully", validUSN: validUsn });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error in adding valid USN" });
   }
 };
 
-export const addValidFacultyId = async (req, res)=>{
+export const addValidFacultyId = async (req, res) => {
   try {
-    const{fId, branch} = req.body;
+    const { fId, branch } = req.body;
 
-    if(!fId || !branch){
-      return res.status(400).json({message: "Please fill required fields"})
+    if (!fId || !branch) {
+      return res.status(400).json({ message: "Please fill required fields" });
     }
 
-    const exist = await validFacultyModel.findOne({ fId, branch});
+    const exist = await validFacultyModel.findOne({ fId, branch });
     if (exist) {
       return res.status(400).json({ message: "faculty id already exists" });
     }
 
     const validFaculty = new validFacultyModel({
-      fId, branch
-    }) 
+      fId,
+      branch,
+    });
 
-    await validFaculty.save()
+    await validFaculty.save();
 
-    res.status(201).json({message: "Faculty id added successfully", validFaculty: validFaculty});
+    res
+      .status(201)
+      .json({
+        message: "Faculty id added successfully",
+        validFaculty: validFaculty,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error in adding valid Faculty id" });
   }
-}
+};

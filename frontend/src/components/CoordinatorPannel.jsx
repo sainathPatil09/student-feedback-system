@@ -32,6 +32,9 @@ const CoordinatorPannel = () => {
       <Link to={'/all-faculty'} className='border-2 p-2'>view faculty</Link>
       <button className='border-2 p-2' onClick={handleClick}>Generate Key</button>
       <button className='border-2 p-2' onClick={handleFeedbackStatus}>Update Feedback Status</button>
+      {/* ====================== */}
+      <Link to={'/add-subject'} className='border-2 p-2 bg-blue-400'>Add subject</Link>
+      <Link to={'/add-course'} className='border-2 p-2 bg-blue-400'>Add course</Link>
     </div>
   )
 }
