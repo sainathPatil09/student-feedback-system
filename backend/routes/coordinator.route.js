@@ -10,6 +10,7 @@ import {
   allStudents,
   coordinatorLogin,
   facultyData,
+  fetchSubject,
   generateAccessKey,
   resetFeedbackStatus,
   studentData,
@@ -51,4 +52,5 @@ router.post("/addCourse", protectedRouteCoordinator, addCourse);
 router.post("/addValidUSN", protectedRouteCoordinator, addValidUSN);
 router.post("/addValidFID", protectedRouteCoordinator, addValidFacultyId);
 router.post("/coordinatorlogin", coordinatorLogin);
+router.get("/subjects/:sem", fetchSubject);
 export default router;

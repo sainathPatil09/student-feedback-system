@@ -22,6 +22,8 @@ import Feedbacks from './components/Feedbacks.jsx'
 import PDF from './components/PDF.jsx'
 import { FeedbackProvider } from './context/FeedbackProvider.jsx'
 import Verify from './pages/Verify.jsx'
+import AddSubject from './coordinator/AddSubject.jsx'
+import AddCourse from './coordinator/AddCourse.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -60,6 +62,13 @@ function App() {
       <Route path='/student-pannel' element={isAuthenticated && authUser.role === "Student" ? <StudentPannel /> : <Navigate to='/'/> }/>
       <Route path='/coordinator-pannel' element={isAuthenticated && authUser.role === "Coordinator" ? <CoordinatorPannel/> : <Navigate to='/'/>}/>
       {/* <Route path='/student-pannel' element={(<StudentPannel />)}/> */}
+
+      {/* ======================= */}
+
+      <Route path='/add-subject' element={isAuthenticated && authUser.role === "Coordinator" ? <AddSubject/> : <Navigate to='/'/>}/>
+      <Route path='/add-course' element={isAuthenticated && authUser.role === "Coordinator" ? <AddCourse/> : <Navigate to='/'/>}/>
+
+
     </Routes>
     </FeedbackProvider>
     </>
