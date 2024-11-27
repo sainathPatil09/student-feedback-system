@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const subjectSchema = new mongoose.Schema({
+  scheme:{
+    type:String,
+    require:true,
+    enum: ["2022"],
+  },
   subjectName: {
     type: String,
     require: true,
