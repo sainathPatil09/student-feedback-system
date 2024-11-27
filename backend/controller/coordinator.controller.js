@@ -335,12 +335,13 @@ export const allFaculty = async (req, res) => {
 // add subject
 export const addSubject = async (req, res) => {
   try {
-    const { subjectName, subjectCode, branch, sem, subjectType, credits } =
+    const {scheme, subjectName, subjectCode, branch, sem, subjectType, credits } =
       req.body;
 
     // console.log(subjectName, subjectCode, branch, sem, subjectType, credits);
 
     if (
+      !scheme ||
       !subjectName ||
       !subjectCode ||
       !branch ||
@@ -351,12 +352,13 @@ export const addSubject = async (req, res) => {
       return res.status(400).json({ message: "Please fill required fields" });
     }
 
-    const exists = await subjectModel.findOne({ subjectCode });
+    const exists = await subjectModel.findOne({ scheme, subjectCode });
     if (exists) {
       return res.status(400).send({ message: "This subject already exists" });
     }
 
     const newSubject = new subjectModel({
+      scheme,
       subjectName,
       subjectCode,
       branch,

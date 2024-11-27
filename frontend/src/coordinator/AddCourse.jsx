@@ -19,6 +19,8 @@ const AddCourse = () => {
     setFormData((prev) => ({
       ...prev,
       sem: selectedSemester,
+      subjects:[],
+      totalSubject:0
     }));
 
     try {
@@ -39,21 +41,35 @@ const AddCourse = () => {
     const selectedSubject = e.target.value;
     setFormData((prev) => {
       const isSelected = prev.subjects.includes(selectedSubject);
-      if (isSelected) {
-        // Remove subject if already selected
-        return {
-          ...prev,
-          subjects: prev.subjects.filter((sub) => sub !== selectedSubject),
-          totalSubject: subjects.length,
-        };
-      } else {
-        // Add subject if not already selected
-        return {
-          ...prev,
-          subjects: [...prev.subjects, selectedSubject],
-          totalSubject: subjects.length,
-        };
-      }
+      
+      // if (isSelected) {
+      //   // Remove subject if already selected
+      //   return {
+      //     ...prev,
+      //     subjects: prev.subjects.filter((sub) => sub !== selectedSubject),
+      //     totalSubject: subjects.length,
+      //   };
+      // } else {
+      //   // Add subject if not already selected
+      //   return {
+      //     ...prev,
+      //     subjects: [...prev.subjects, selectedSubject],
+      //     totalSubject: subjects.length,
+      //   };
+      // }
+
+
+      const updatedSubjects = isSelected
+        ? prev.subjects.filter((sub) => sub !== selectedSubject)
+        : [...prev.subjects, selectedSubject];
+
+      return {
+        ...prev,
+        subjects: updatedSubjects,
+        totalSubject: updatedSubjects.length, // Correctly update totalSubject based on selected subjects
+      };
+
+
     });
   };
 
