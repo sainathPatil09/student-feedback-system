@@ -25,6 +25,8 @@ import Verify from './pages/Verify.jsx'
 import AddSubject from './coordinator/AddSubject.jsx'
 import AddCourse from './coordinator/AddCourse.jsx'
 import RegisterStudent from './student/RegisterStudent.jsx'
+import RegisterFaculty from './faculty/RegisterFaculty.jsx'
+import LoginFaculty from './faculty/LoginFaculty.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -69,6 +71,8 @@ function App() {
       <Route path='/add-subject' element={isAuthenticated && authUser.role === "Coordinator" ? <AddSubject/> : <Navigate to='/'/>}/>
       <Route path='/add-course' element={isAuthenticated && authUser.role === "Coordinator" ? <AddCourse/> : <Navigate to='/'/>}/>
       <Route path='/register-student' element={<RegisterStudent/>}/>
+      <Route path='/register-faculty' element={<RegisterFaculty/>}/>
+      <Route path='/login-faculty' element={<LoginFaculty/>}/>
 
     </Routes>
     </FeedbackProvider>

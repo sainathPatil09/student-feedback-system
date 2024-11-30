@@ -11,6 +11,8 @@ const Home = () => {
 
       {/* ======================== */}
       <Link to={'/register-student'} className='border-2 p-2 bg-blue-400'>Student Register</Link>
+      <Link to={'/register-faculty'} className='border-2 p-2 bg-blue-400'>Faculty Register</Link>
+      <Link to={'/login-faculty'} className='border-2 p-2 bg-blue-400'>Faculty login</Link>
     </div>
   )
 }
