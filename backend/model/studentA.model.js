@@ -14,6 +14,11 @@ const studentSchemaA = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    required: true,
+    enum: ["Student", "Admin", "Coordinator", "Faculty"],
+  },
   usn: {
     type: String,
     required: true,

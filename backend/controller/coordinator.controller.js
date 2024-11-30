@@ -389,7 +389,6 @@ export const addCourse = async (req, res) => {
     console.log(scheme, branch, sem, subjects, totalSubject);
 
     if (!scheme || !branch || !sem || !subjects || !totalSubject) {
-      console.log("hello");
       return res.status(400).json({ message: "Please fill required fields" });
     }
     // Find subjects by name

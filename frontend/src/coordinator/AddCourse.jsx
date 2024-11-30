@@ -64,8 +64,7 @@ const AddCourse = () => {
 
       return {
         ...prev,
-        subjects: updatedSubjects,
-        totalSubject: updatedSubjects.length,
+        subjects: updatedSubjects
       };
     });
   };
@@ -103,7 +102,10 @@ const AddCourse = () => {
           <form onSubmit={handleSubmit} method="POST" className="space-y-6">
             {/* Scheme */}
             <div>
-              <label htmlFor="scheme" className="block text-sm font-medium leading-6 ">
+              <label
+                htmlFor="scheme"
+                className="block text-sm font-medium leading-6 "
+              >
                 Scheme
               </label>
               <div className="mt-2">
@@ -123,7 +125,10 @@ const AddCourse = () => {
 
             {/* Branch */}
             <div>
-              <label htmlFor="branch" className="block text-sm font-medium leading-6 ">
+              <label
+                htmlFor="branch"
+                className="block text-sm font-medium leading-6 "
+              >
                 Branch
               </label>
               <div className="mt-2">
@@ -145,7 +150,10 @@ const AddCourse = () => {
 
             {/* Semester */}
             <div>
-              <label htmlFor="sem" className="block text-sm font-medium leading-6 ">
+              <label
+                htmlFor="sem"
+                className="block text-sm font-medium leading-6 "
+              >
                 Sem
               </label>
               <div className="mt-2">
@@ -179,7 +187,9 @@ const AddCourse = () => {
                         type="checkbox"
                         value={subject.subjectName}
                         onChange={handleSubjectChange}
-                        checked={formData.subjects.includes(subject.subjectName)}
+                        checked={formData.subjects.includes(
+                          subject.subjectName
+                        )}
                       />
                       <label>{subject.subjectName}</label>
                     </div>
@@ -201,7 +211,9 @@ const AddCourse = () => {
                         type="checkbox"
                         value={subject.subjectName}
                         onChange={handleSubjectChange}
-                        checked={formData.subjects.includes(subject.subjectName)}
+                        checked={formData.subjects.includes(
+                          subject.subjectName
+                        )}
                       />
                       <label>{subject.subjectName}</label>
                     </div>
@@ -224,8 +236,10 @@ const AddCourse = () => {
                 <input
                   type="number"
                   required
-                  readOnly
-                  value={formData.subjects.length}
+                  value={formData.totalSubject}
+                  onChange={(e) =>
+                    setFormData({ ...formData, totalSubject: e.target.value })
+                  }
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 outline-none border-none text-lg"
                 />
               </div>
@@ -247,5 +261,3 @@ const AddCourse = () => {
 };
 
 export default AddCourse;
-
-
