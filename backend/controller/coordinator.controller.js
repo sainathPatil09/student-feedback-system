@@ -451,7 +451,9 @@ export const fetchSubject = async (req, res) => {
         .json({ message: "No subjects found for this semester" });
     }
 
-    const coreSubjects = subjects.filter((subject) => subject.subjectType === "Core");
+    const coreSubjects = subjects.filter(
+      (subject) => subject.subjectType === "Core"
+    );
     const electiveSubjects = subjects.filter(
       (subject) => subject.subjectType === "Elective"
     );
@@ -526,5 +528,59 @@ export const addValidFacultyId = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error in adding valid Faculty id" });
+  }
+};
+
+// mapping of faculty
+
+export const facultyMapping = async (req, res) => {
+  try {
+    const { scheme, sem, div, branch, subject, facultyName } = req.body;
+
+    if (!scheme || !sem || !div || !branch || !subject || !facultyName) {
+      return res.status(400).json({ error: "please fill required fileds" });
+    }
+    // Check if mapping already exists
+    const existingMapping = await Mapping.findOne({
+      scheme,
+      sem,
+      div,
+      branch,
+      subject,
+      facultyName,
+    });
+
+    if (existingMapping) {
+      return res.status(409).json({
+        error: "Mapping already exists for the given details.",
+      });
+    }
+
+    // Create a new mapping document
+    const newMapping = new Mapping({
+      scheme,
+      sem,
+      div,
+      branch,
+      subject,
+      facultyName,
+    });
+
+    // Save the mapping to the database
+    await newMapping.save();
+
+    // Respond with success message
+    return res.status(201).json({
+      message: "Mapping created successfully!",
+      mapping: newMapping,
+    });
+  } catch (error) {
+    console.error("Error creating faculty mapping:", error);
+
+    // Respond with error message
+    return res.status(500).json({
+      error:
+        "An error occurred while creating the mapping. Please try again later.",
+    });
   }
 };
