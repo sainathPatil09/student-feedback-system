@@ -52,5 +52,5 @@ router.post("/addCourse", protectedRouteCoordinator, addCourse);
 router.post("/addValidUSN", protectedRouteCoordinator, addValidUSN);
 router.post("/addValidFID", protectedRouteCoordinator, addValidFacultyId);
 router.post("/coordinatorlogin", coordinatorLogin);
-router.get("/subjects/:sem", fetchSubject);
+router.get("/subjects", fetchSubject);
 export default router;

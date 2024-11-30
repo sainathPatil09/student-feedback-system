@@ -10,6 +10,7 @@ import { courseModel } from "../model/course.model.js";
 import { subjectModel } from "../model/subject.model.js";
 import { studentModelA } from "../model/studentA.model.js";
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
 export const studentLogin = async (req, res) => {
   try {
@@ -183,6 +184,7 @@ export const registerStudent = async (req, res) => {
       name,
       email,
       password,
+      role,
       usn,
       branch,
       scheme,
@@ -196,6 +198,7 @@ export const registerStudent = async (req, res) => {
       !name ||
       !email ||
       !password ||
+      !role ||
       !usn ||
       !branch ||
       !scheme ||
@@ -223,12 +226,12 @@ export const registerStudent = async (req, res) => {
         message: "No course found for the given scheme, branch, and sem",
       });
     }
-
+    console.log(course, "course")
     // Fetch core and elective subjects
     const coreSubjects = course.subjects.filter(
       (subject) => subject.subjectType === "Core"
     );
-    console.log(coreSubjects);
+    console.log(coreSubjects, "coreSubject");
     console.log(electives);
     const electiveSubjects = await subjectModel.find({
       subjectName: { $in: electives },
@@ -251,11 +254,11 @@ export const registerStudent = async (req, res) => {
     //   ...electives,
     // ];
 
-    const existingStudent = await studentModelA.findOne({ email });
+    const existingStudent = await studentModelA.findOne({ scheme, usn });
     if (existingStudent) {
       return res
         .status(400)
-        .json({ message: "Student already registered with this email" });
+        .json({ message: "Student already registered with this USN" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -265,6 +268,7 @@ export const registerStudent = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role: role,
       usn,
       branch,
       scheme,

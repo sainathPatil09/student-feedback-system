@@ -335,8 +335,15 @@ export const allFaculty = async (req, res) => {
 // add subject
 export const addSubject = async (req, res) => {
   try {
-    const {scheme, subjectName, subjectCode, branch, sem, subjectType, credits } =
-      req.body;
+    const {
+      scheme,
+      subjectName,
+      subjectCode,
+      branch,
+      sem,
+      subjectType,
+      credits,
+    } = req.body;
 
     // console.log(subjectName, subjectCode, branch, sem, subjectType, credits);
 
@@ -382,7 +389,6 @@ export const addCourse = async (req, res) => {
     console.log(scheme, branch, sem, subjects, totalSubject);
 
     if (!scheme || !branch || !sem || !subjects || !totalSubject) {
-      console.log("hello")
       return res.status(400).json({ message: "Please fill required fields" });
     }
     // Find subjects by name
@@ -429,12 +435,15 @@ export const addCourse = async (req, res) => {
 
 // fetch subjects of selected sem
 export const fetchSubject = async (req, res) => {
-  const { sem } = req.params;
+  const { scheme, branch, sem } = req.query;
 
   try {
-    const subjects =await subjectModel.find({ sem });
-    console.log("subjects")
-    console.log(subjects)
+    if (!scheme || !branch || !sem) {
+      return res.status(400).json({ error: "Missing required parameters" });
+    }
+    const subjects = await subjectModel.find({ scheme, branch, sem });
+    console.log("subjects");
+    console.log(subjects);
     // If no subjects are found, return an empty array
     if (!subjects || subjects.length === 0) {
       return res
@@ -442,8 +451,16 @@ export const fetchSubject = async (req, res) => {
         .json({ message: "No subjects found for this semester" });
     }
 
+    const coreSubjects = subjects.filter((subject) => subject.subjectType === "Core");
+    const electiveSubjects = subjects.filter(
+      (subject) => subject.subjectType === "Elective"
+    );
+
     // Return subjects
-    res.status(200).json(subjects.map((subject) => subject.subjectName)); // Return only subject names
+    res.status(200).json({
+      core: coreSubjects,
+      electives: electiveSubjects,
+    });
   } catch (error) {
     console.error("Error fetching subjects:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -502,12 +519,10 @@ export const addValidFacultyId = async (req, res) => {
 
     await validFaculty.save();
 
-    res
-      .status(201)
-      .json({
-        message: "Faculty id added successfully",
-        validFaculty: validFaculty,
-      });
+    res.status(201).json({
+      message: "Faculty id added successfully",
+      validFaculty: validFaculty,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error in adding valid Faculty id" });
