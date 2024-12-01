@@ -54,8 +54,8 @@ const FacultyMapping = () => {
         fetchSubjects(scheme, branch, sem);
         fectchFaculty(branch)
 
-        console.log(subjects)
-        console.log(faculty)
+        // console.log(subjects)
+        // console.log(faculty)
       }
     }
   };

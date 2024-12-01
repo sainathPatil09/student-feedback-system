@@ -312,6 +312,7 @@ export const loginStudent = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
+    createTokenAndSaveCookie(student._id, student.role, res);
 
     res.status(200).json({ message: "Student Login Successfully", student });
   } catch (error) {

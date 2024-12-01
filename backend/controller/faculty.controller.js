@@ -1,3 +1,4 @@
+import createTokenAndSaveCookie from "../jwt/generateToken.js";
 import { facultyModelA } from "../model/facultyA.model.js";
 import { validFacultyModel } from "../model/validFaculty.model.js";
 import bcrypt from "bcryptjs";
@@ -100,6 +101,7 @@ export const facultyLogin = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
+    createTokenAndSaveCookie(faculty._id, faculty.role, res);
     
     res.status(200).json({ message: "Faculty Login Successfully", faculty });
   } catch (error) {

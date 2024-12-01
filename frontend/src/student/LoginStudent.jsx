@@ -1,16 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
-const LoginFaculty = () => {
+const LoginStudent = () => {
   const navigateTo = useNavigate();
   const { setIsAuthenticated } = useAuth();
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    fId: "",
+    usn: "",
   });
 
   const handleInputChange = (e) => {
@@ -24,21 +24,20 @@ const LoginFaculty = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData);
-      const response = await axios.post("/api/facultyLogin", formData);
-      console.log(response.data.faculty);
-      alert("Faculty logged in successfully!");
-      localStorage.setItem("auth", JSON.stringify(response.data.faculty));
+      const response = await axios.post("/api/loginStudent", formData);
+      console.log(response.data.student);
+      alert("Student logged in successfully!");
+      localStorage.setItem("auth", JSON.stringify(response.data.student));
       setIsAuthenticated(true);
       setFormData({
         email: "",
         password: "",
-        fId: ""
+        usn: "",
       });
-      navigateTo("/pannel-faculty");
+      navigateTo("/pannel-student");
     } catch (error) {
-      console.error("Error login faculty:", error);
-      alert("Failed to login faculty.");
+      console.error("Error login student:", error);
+      alert("Failed to login student.");
     }
   };
 
@@ -48,14 +47,12 @@ const LoginFaculty = () => {
         <div className="flex min-h-full flex-1 flex-col justify-center px-12 py-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight ">
-              Faculty Login
+              Student Login
             </h2>
           </div>
 
           <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
             <form onSubmit={handleSubmit} method="POST" className="space-y-6">
-              
-
               {/* email */}
               <div>
                 <label
@@ -75,10 +72,6 @@ const LoginFaculty = () => {
                   />
                 </div>
               </div>
-
-              
-
-              
 
               {/* password */}
               <div>
@@ -111,34 +104,32 @@ const LoginFaculty = () => {
                 </div>
               </div>
 
-              {/* fId */}
+              {/* Usn */}
               <div>
                 <label
-                  htmlFor="fId"
+                  htmlFor="usn"
                   className="block text-sm font-medium leading-6 "
                 >
-                  Faculty Id
+                  USN
                 </label>
                 <div className="mt-2">
                   <input
                     type="text"
                     required
-                    name="fId"
+                    name="usn"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 outline-none border-none text-lg"
-                    value={formData.fId}
+                    value={formData.usn}
                     onChange={handleInputChange}
                   />
                 </div>
               </div>
-
-              
 
               <div>
                 <button
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6  shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Faculty Login
+                  Student Login
                 </button>
               </div>
             </form>
@@ -149,4 +140,4 @@ const LoginFaculty = () => {
   );
 };
 
-export default LoginFaculty;
+export default LoginStudent;
