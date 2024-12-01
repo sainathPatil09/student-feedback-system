@@ -320,3 +320,26 @@ export const loginStudent = async (req, res) => {
     res.status(500).json({ message: "Error logging in." });
   }
 };
+
+export const validiateKey = async (req, res)=>{
+  try {
+    const{key} = req.body
+    // console.log(key , "key") 
+
+    const latestKey = await accessKeyModel.findOne().sort({ createdAt: -1 });
+
+    if (
+      !latestKey ||
+      latestKey.key !== key ||
+      latestKey.validUntil < new Date()
+    ) {
+      return res.status(401).json({ message: "Invalid or expired access key" });
+    }
+
+    res.status(200).json({ message: "Key validation passed! valid key" });
+
+  } catch (error) {
+    console.error("Error during validating key:", error.message);
+    res.status(500).json({ message: "Error validating key." });
+  }
+}

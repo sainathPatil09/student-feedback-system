@@ -31,6 +31,7 @@ import FacultyMapping from './coordinator/FacultyMapping.jsx'
 import LoginStudent from './student/LoginStudent.jsx'
 import PannelStudent from './student/PannelStudent.jsx'
 import PannelFaculty from './faculty/PannelFaculty.jsx'
+import Feedback from './student/Feedback.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -80,6 +81,7 @@ function App() {
       <Route path='/login-faculty' element={<LoginFaculty/>}/>
       <Route path='/map-faculty' element={isAuthenticated && authUser.role === "Coordinator" ? <FacultyMapping/> : <Navigate to='/'/>}/>
       <Route path='/pannel-student' element={isAuthenticated && authUser.role === "Student" ? <PannelStudent /> : <Navigate to='/'/> }/>
+      <Route path='/give-feedback' element={isAuthenticated && authUser.role === "Student" ? <Feedback /> : <Navigate to='/'/> }/>
       <Route path='/pannel-faculty' element={isAuthenticated && authUser.role === "Faculty" ? <PannelFaculty /> : <Navigate to='/'/> }/>
     </Routes>
     </FeedbackProvider>

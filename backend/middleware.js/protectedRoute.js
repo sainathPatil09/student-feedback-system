@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
-import { studentModel } from '../model/student.model.js';
+// import { studentModel } from '../model/student.model.js';
 import { coordinatorModel } from '../model/coordinator.model.js';
+import { studentModelA } from '../model/studentA.model.js';
 
 
 export const protectedRoute=async(req,res, next)=>{
@@ -12,7 +13,7 @@ export const protectedRoute=async(req,res, next)=>{
         }
 
         const decoded = jwt.verify(token, process.env.JWT_TOKEN);
-        const user = await studentModel.findById(decoded.userId).select("-password")
+        const user = await studentModelA.findById(decoded.userId).select("-password")
         if (!decoded) {
         return res.status(403).json({ error: "Invalid token" });
         }
