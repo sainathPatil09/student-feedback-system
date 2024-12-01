@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RegisterFaculty = () => {
-
+  const navigateTo = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -40,6 +41,7 @@ const RegisterFaculty = () => {
         branch: "",
         designation: ""
       });
+      navigateTo("/login-faculty");
     } catch (error) {
       console.error("Error registering faculty:", error);
       alert("Failed to register faculty.");

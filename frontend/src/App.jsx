@@ -28,6 +28,9 @@ import RegisterStudent from './student/RegisterStudent.jsx'
 import RegisterFaculty from './faculty/RegisterFaculty.jsx'
 import LoginFaculty from './faculty/LoginFaculty.jsx'
 import FacultyMapping from './coordinator/FacultyMapping.jsx'
+import LoginStudent from './student/LoginStudent.jsx'
+import PannelStudent from './student/PannelStudent.jsx'
+import PannelFaculty from './faculty/PannelFaculty.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -72,10 +75,12 @@ function App() {
       <Route path='/add-subject' element={isAuthenticated && authUser.role === "Coordinator" ? <AddSubject/> : <Navigate to='/'/>}/>
       <Route path='/add-course' element={isAuthenticated && authUser.role === "Coordinator" ? <AddCourse/> : <Navigate to='/'/>}/>
       <Route path='/register-student' element={<RegisterStudent/>}/>
+      <Route path='/login-student' element={<LoginStudent/>}/>
       <Route path='/register-faculty' element={<RegisterFaculty/>}/>
       <Route path='/login-faculty' element={<LoginFaculty/>}/>
       <Route path='/map-faculty' element={isAuthenticated && authUser.role === "Coordinator" ? <FacultyMapping/> : <Navigate to='/'/>}/>
-
+      <Route path='/pannel-student' element={isAuthenticated && authUser.role === "Student" ? <PannelStudent /> : <Navigate to='/'/> }/>
+      <Route path='/pannel-faculty' element={isAuthenticated && authUser.role === "Faculty" ? <PannelFaculty /> : <Navigate to='/'/> }/>
     </Routes>
     </FeedbackProvider>
     </>

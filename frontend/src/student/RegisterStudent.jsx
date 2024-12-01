@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RegisterStudent = () => {
+  const navigateTo = useNavigate();
   const [coreSubjects, setCoreSubjects] = useState([]);
   const [electiveSubjects, setElectiveSubjects] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
@@ -69,6 +71,7 @@ const RegisterStudent = () => {
         electives: [],
         phNumber: "",
       });
+      navigateTo("/login-student");
       setCoreSubjects([]);
       setElectiveSubjects([]);
     } catch (error) {
