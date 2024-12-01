@@ -35,6 +35,7 @@ const CoordinatorPannel = () => {
       {/* ====================== */}
       <Link to={'/add-subject'} className='border-2 p-2 bg-blue-400'>Add subject</Link>
       <Link to={'/add-course'} className='border-2 p-2 bg-blue-400'>Add course</Link>
+      <Link to={'/map-faculty'} className='border-2 p-2 bg-blue-400'>Map Faculty</Link>
     </div>
   )
 }

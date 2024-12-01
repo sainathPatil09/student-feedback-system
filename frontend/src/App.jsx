@@ -27,6 +27,7 @@ import AddCourse from './coordinator/AddCourse.jsx'
 import RegisterStudent from './student/RegisterStudent.jsx'
 import RegisterFaculty from './faculty/RegisterFaculty.jsx'
 import LoginFaculty from './faculty/LoginFaculty.jsx'
+import FacultyMapping from './coordinator/FacultyMapping.jsx'
 
 function App() {
   const{authUser, loading, isAuthenticated} = useAuth()
@@ -73,6 +74,7 @@ function App() {
       <Route path='/register-student' element={<RegisterStudent/>}/>
       <Route path='/register-faculty' element={<RegisterFaculty/>}/>
       <Route path='/login-faculty' element={<LoginFaculty/>}/>
+      <Route path='/map-faculty' element={isAuthenticated && authUser.role === "Coordinator" ? <FacultyMapping/> : <Navigate to='/'/>}/>
 
     </Routes>
     </FeedbackProvider>
