@@ -11,6 +11,7 @@ import {
   coordinatorLogin,
   facultyData,
   facultyMapping,
+  fetchFaculty,
   fetchSubject,
   generateAccessKey,
   resetFeedbackStatus,
@@ -55,4 +56,5 @@ router.post("/addValidFID", protectedRouteCoordinator, addValidFacultyId);
 router.post("/alotMapping", protectedRouteCoordinator, facultyMapping);
 router.post("/coordinatorlogin", coordinatorLogin);
 router.get("/subjects", fetchSubject);
+router.get("/faculties", fetchFaculty);
 export default router;

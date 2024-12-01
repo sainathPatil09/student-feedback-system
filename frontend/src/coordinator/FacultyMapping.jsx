@@ -1,31 +1,45 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 
 const FacultyMapping = () => {
 
-  const [showPassword, setShowPassword] = useState(false);
+  const[subjects, setSubjects] = useState([]);
+  const[faculty, setFaculty] = useState([]);
   const [formData, setFormData] = useState({
     scheme: "",
     sem: "",
     div: "",
     subject: "",
     branch: "",
-    facultyName: "",
+    facultyId: "",
   });
-
   const fetchSubjects = async (scheme, branch, sem) => {
     try {
       const response = await axios.get("/api/subjects", {
         params: { scheme, branch, sem },
       });
-      console.log(response);
-      setCoreSubjects(response.data.core || []);
-      setElectiveSubjects(response.data.electives || []);
+      const{core, electives} = response.data
+      const combinedSubjects = [...(core || []), ...(electives || [])]; 
+      console.log(combinedSubjects);
+      setSubjects(combinedSubjects)
     } catch (error) {
       console.error("Error fetching subjects:", error);
-      setCoreSubjects([]);
-      setElectiveSubjects([]);
+      setSubjects([])
     }
   };
+
+  const fectchFaculty = async(branch)=>{
+    try {
+      const response = await axios.get('/api/faculties', {
+        params:{branch}
+      })
+      console.log(response.data.faculty)
+      setFaculty(response.data?.faculty);
+    } catch (error) {
+      console.error("Error fetching faculty:", error);
+      setFaculty([]);
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +52,10 @@ const FacultyMapping = () => {
       const { scheme, branch, sem } = { ...formData, [name]: value };
       if (scheme && branch && sem) {
         fetchSubjects(scheme, branch, sem);
+        fectchFaculty(branch)
+
+        console.log(subjects)
+        console.log(faculty)
       }
     }
   };
@@ -46,27 +64,20 @@ const FacultyMapping = () => {
     e.preventDefault();
     try {
       console.log(formData);
-      const response = await axios.post("/api/registerStudent", formData);
+      const response = await axios.post("/api/alotMapping", formData);
       console.log(response);
-      alert("Student registered successfully!");
+      alert("Mapping done successfully!");
       setFormData({
-        name: "",
-        email: "",
-        password: "",
-        role:"",
-        usn: "",
-        branch: "",
         scheme: "",
         sem: "",
         div: "",
-        electives: [],
-        phNumber: "",
+        subject:"",
+        branch: "",
+        facultyId: ""
       });
-      setCoreSubjects([]);
-      setElectiveSubjects([]);
     } catch (error) {
-      console.error("Error registering student:", error);
-      alert("Failed to register student.");
+      console.error("Error Mapping faculty:", error);
+      alert(error.response.data.error);
     }
   };
 
@@ -88,7 +99,7 @@ const FacultyMapping = () => {
                   htmlFor="scheme"
                   className="block text-sm font-medium leading-6 "
                 >
-                  Role
+                  Scheme
                 </label>
                 <div className="mt-2">
                   <select
@@ -133,6 +144,31 @@ const FacultyMapping = () => {
                 </div>
               </div>
 
+              {/* branch */}
+              <div>
+                <label
+                  htmlFor="branch"
+                  className="block text-sm font-medium leading-6 "
+                >
+                  Branch
+                </label>
+                <div className="mt-2">
+                  <select
+                    name="branch"
+                    required
+                    id=""
+                    value={formData.branch}
+                    onChange={handleInputChange}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
+                  >
+                    <option value="">Select</option>
+                    <option value="CSE">CSE</option>
+                    <option value="AIDS">AIDS</option>
+                    <option value="ECE">ECE</option>
+                  </select>
+                </div>
+              </div>
+
               {/* Div */}
               <div>
                 <label
@@ -156,8 +192,9 @@ const FacultyMapping = () => {
                   </select>
                 </div>
               </div>
+              
 
-              {/* subject */}
+              {/* FId
               <div>
                 <label
                   htmlFor="fId"
@@ -175,28 +212,57 @@ const FacultyMapping = () => {
                     onChange={handleInputChange}
                   />
                 </div>
-              </div>
+              </div> */}
 
-              {/* faculty name */}
+              {/* subject*/}
               <div>
                 <label
-                  htmlFor="branch"
+                  htmlFor="subject"
                   className="block text-sm font-medium leading-6 "
                 >
-                  Branch
+                  Subject
                 </label>
                 <div className="mt-2">
                   <select
                     required
-                    name="branch"
-                    value={formData.branch}
+                    name="subject"
+                    value={formData.subject}
                     onChange={handleInputChange}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
                   >
                     <option value="">Select</option>
-                    <option value="CSE">CSE</option>
-                    <option value="AIDS">AIDS</option>
-                    <option value="ECE">ECE</option>
+                    {
+                      subjects.map((s)=>{
+                       return <option key={s._id} value={s.subjectName}>{s.subjectName}</option>
+                      })
+                    }
+                  </select>
+                </div>
+              </div>
+
+
+              {/* faculty name / fId */}
+              <div>
+                <label
+                  htmlFor="facultyName"
+                  className="block text-sm font-medium leading-6 "
+                >
+                  Faculty Name / id
+                </label>
+                <div className="mt-2">
+                  <select
+                    required
+                    name="facultyId"
+                    value={formData.facultyId}
+                    onChange={handleInputChange}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
+                  >
+                    <option value="">Select</option>
+                    {
+                      faculty.map((f)=>{
+                      return <option key={f._id} value={f.Id}>{f.name} {" "}{f.fId}</option>
+                      })
+                    }
                   </select>
                 </div>
               </div>

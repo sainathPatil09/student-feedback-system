@@ -25,7 +25,7 @@ const mappingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  facultyName: {
+  facultyId: {
     type: String,
     required: true,
   }

@@ -10,6 +10,8 @@ import { subjectModel } from "../model/subject.model.js";
 import { courseModel } from "../model/course.model.js";
 import { validStudentModel } from "../model/validStudent.model.js";
 import { validFacultyModel } from "../model/validFaculty.model.js";
+import { facultyModelA } from "../model/facultyA.model.js";
+import { mappingModel } from "../model/mapping.model.js";
 
 //coordinator will add facultyData
 export const facultyData = async (req, res) => {
@@ -469,6 +471,23 @@ export const fetchSubject = async (req, res) => {
   }
 };
 
+//fetch faculty for branch
+export const fetchFaculty = async (req, res)=>{
+  const {branch } = req.query;
+
+  try {
+    if (!branch) {
+      return res.status(400).json({ error: "Missing required parameters" });
+    }
+
+    const faculty = await facultyModelA.find({ branch });
+
+    res.status(200).json({faculty});
+  } catch (error) {
+    
+  }
+}
+
 export const addValidUSN = async (req, res) => {
   try {
     const { usn, branch, scheme, sem, div } = req.body;
@@ -535,19 +554,19 @@ export const addValidFacultyId = async (req, res) => {
 
 export const facultyMapping = async (req, res) => {
   try {
-    const { scheme, sem, div, branch, subject, facultyName } = req.body;
+    const { scheme, sem, div, branch, subject, facultyId } = req.body;
+    console.log(scheme, sem, div, branch, subject, facultyId)
 
-    if (!scheme || !sem || !div || !branch || !subject || !facultyName) {
+    if (!scheme || !sem || !div || !branch || !subject || !facultyId) {
       return res.status(400).json({ error: "please fill required fileds" });
     }
     // Check if mapping already exists
-    const existingMapping = await Mapping.findOne({
+    const existingMapping = await mappingModel.findOne({
       scheme,
       sem,
       div,
       branch,
       subject,
-      facultyName,
     });
 
     if (existingMapping) {
@@ -557,13 +576,13 @@ export const facultyMapping = async (req, res) => {
     }
 
     // Create a new mapping document
-    const newMapping = new Mapping({
+    const newMapping = new mappingModel({
       scheme,
       sem,
       div,
       branch,
       subject,
-      facultyName,
+      facultyId,
     });
 
     // Save the mapping to the database
