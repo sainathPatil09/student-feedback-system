@@ -347,7 +347,7 @@ export const addSubject = async (req, res) => {
       credits,
     } = req.body;
 
-    // console.log(subjectName, subjectCode, branch, sem, subjectType, credits);
+    // console.log(scheme, subjectName, subjectCode, branch, sem, subjectType, credits);
 
     if (
       !scheme ||

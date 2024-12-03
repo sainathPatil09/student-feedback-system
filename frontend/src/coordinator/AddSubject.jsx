@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 
 const AddSubject = () => {
+  const [scheme, setScheme] = useState("");
   const [subjectName, setSubjectName] = useState("");
   const [subjectCode, setSubjectCode] = useState("");
   const [branch, setBranch] = useState("");
@@ -14,6 +15,7 @@ const AddSubject = () => {
     e.preventDefault();
     try {
       const response = await axios.post("/api/addSubject", {
+        scheme,
         subjectName,
         subjectCode,
         branch,
@@ -23,6 +25,7 @@ const AddSubject = () => {
       });
 
       console.log(response);
+      setScheme("")
       setSubjectName("");
       setSubjectCode("");
       setBranch("");
@@ -52,6 +55,28 @@ const AddSubject = () => {
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} method="POST" className="space-y-6">
+            {/* scheme */}
+            <div>
+              <label
+                htmlFor="scheme"
+                className="block text-sm font-medium leading-6 "
+              >
+                Scheme
+              </label>
+              <div className="mt-2">
+                <select
+                  name=""
+                  required
+                  id=""
+                  value={scheme}
+                  onChange={(e) => setScheme(e.target.value)}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg outline-none border-none"
+                >
+                  <option value="">Select</option>
+                  <option value="2022">2022</option>
+                </select>
+              </div>
+            </div>
             {/* subject name */}
             <div>
               <label
