@@ -345,9 +345,10 @@ export const addSubject = async (req, res) => {
       sem,
       subjectType,
       credits,
+      totalSubjects
     } = req.body;
 
-    // console.log(scheme, subjectName, subjectCode, branch, sem, subjectType, credits);
+    console.log(scheme, subjectName, subjectCode, branch, sem, subjectType, credits, totalSubjects);
 
     if (
       !scheme ||
@@ -377,12 +378,47 @@ export const addSubject = async (req, res) => {
     });
 
     const savedSubject = await newSubject.save();
-    res.send(savedSubject);
+
+
+    let course = await courseModel.findOne({ scheme, branch, sem });
+
+    if (!course) {
+      // Create a new course if it doesn't exist
+      course = new courseModel({
+        scheme,
+        branch,
+        sem,
+        subjects: [],
+        totalSubject: totalSubjects, // Initialize totalSubjects as 0
+      });
+      await course.save()
+    }
+    console.log(course)
+    course.subjects.push(savedSubject._id);
+    const savedCourse = await course.save();
+    // res.send(savedSubject);
+    res.status(201).json({
+      message: "Subject added successfully and course updated",
+      subject: savedSubject,
+      course: savedCourse,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Failed to add subject" });
   }
 };
+
+//check course is present or not
+export const checkCourse = async (req, res)=>{
+  try {
+    const { scheme, branch, sem } = req.query;
+    const course = await courseModel.findOne({ scheme, branch, sem });
+    res.json({ exists: !!course });
+  } catch (error) {
+    console.error("Error checking course:", error);
+    res.status(500).json({ error: "Failed to check course" });
+  }
+}
 
 // add course
 export const addCourse = async (req, res) => {

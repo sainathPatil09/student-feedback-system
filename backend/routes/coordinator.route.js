@@ -8,6 +8,7 @@ import {
   addValidUSN,
   allFaculty,
   allStudents,
+  checkCourse,
   coordinatorLogin,
   facultyData,
   facultyMapping,
@@ -57,4 +58,5 @@ router.post("/alotMapping", protectedRouteCoordinator, facultyMapping);
 router.post("/coordinatorlogin", coordinatorLogin);
 router.get("/subjects", fetchSubject);
 router.get("/faculties", fetchFaculty);
+router.get("/checkCourse", checkCourse);
 export default router;
