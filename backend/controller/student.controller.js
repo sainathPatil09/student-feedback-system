@@ -11,6 +11,7 @@ import { subjectModel } from "../model/subject.model.js";
 import { studentModelA } from "../model/studentA.model.js";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import { mappingModel } from "../model/mapping.model.js";
 
 export const studentLogin = async (req, res) => {
   try {
@@ -226,7 +227,7 @@ export const registerStudent = async (req, res) => {
         message: "No course found for the given scheme, branch, and sem",
       });
     }
-    console.log(course, "course")
+    console.log(course, "course");
     // Fetch core and elective subjects
     const coreSubjects = course.subjects.filter(
       (subject) => subject.subjectType === "Core"
@@ -314,17 +315,38 @@ export const loginStudent = async (req, res) => {
     }
     createTokenAndSaveCookie(student._id, student.role, res);
 
-    res.status(200).json({ message: "Student Login Successfully", student });
+    // Find student and populate coreSubjects and electiveSubjects
+    const stu = await studentModelA
+      .findById(student._id)
+      .populate("coreSubjects", "subjectName") // Fetch only the subjectName field for coreSubjects
+      .populate("electiveSubjects", "subjectName"); // Fetch only the subjectName field for electiveSubjects
+
+    console.log(stu);
+
+    res.status(200).json({
+      message: "Student Login Successfully",
+      student: {
+        name: stu.name,
+        email: stu.email,
+        usn: stu.usn,
+        branch: stu.branch,
+        sem: stu.sem,
+        div: stu.div,
+        coreSubjects: stu.coreSubjects, // Includes subjectName
+        electiveSubjects: stu.electiveSubjects, // Includes subjectName
+        feedbackGiven: stu.feedbackGiven,
+      },
+    });
   } catch (error) {
     console.error("Error during faculty login:", error.message);
     res.status(500).json({ message: "Error logging in." });
   }
 };
 
-export const validiateKey = async (req, res)=>{
+export const validiateKey = async (req, res) => {
   try {
-    const{key} = req.body
-    // console.log(key , "key") 
+    const { key } = req.body;
+    // console.log(key , "key")
 
     const latestKey = await accessKeyModel.findOne().sort({ createdAt: -1 });
 
@@ -337,9 +359,73 @@ export const validiateKey = async (req, res)=>{
     }
 
     res.status(200).json({ message: "Key validation passed! valid key" });
-
   } catch (error) {
     console.error("Error during validating key:", error.message);
     res.status(500).json({ message: "Error validating key." });
   }
-}
+};
+
+export const studentProfile = async (req, res) => {
+  try {
+    const { studentId } = req.params; // Assume studentId is passed in request parameters
+    console.log(studentId);
+    // Find student and populate coreSubjects and electiveSubjects
+    const student = await studentModelA
+      .findById(studentId)
+      .populate("coreSubjects", "subjectName") // Fetch only the subjectName field for coreSubjects
+      .populate("electiveSubjects", "subjectName"); // Fetch only the subjectName field for electiveSubjects
+    console.log(student);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    // Build custom response
+    res.status(200).json({
+      message: "Student profile fetched successfully",
+      student: {
+        name: student.name,
+        email: student.email,
+        usn: student.usn,
+        branch: student.branch,
+        sem: student.sem,
+        div: student.div,
+        coreSubjects: student.coreSubjects, // Includes subjectName
+        electiveSubjects: student.electiveSubjects, // Includes subjectName
+        feedbackGiven: student.feedbackGiven,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching student profile:", error.message);
+    res.status(500).json({ message: "Failed to fetch student profile" });
+  }
+};
+
+export const getFacultyMappingForFeedback = async (req, res) => {
+  try {
+    const { branch, sem, div, coreSubjects, electiveSubjects } = req.body; // Assume student data is passed in the request
+    // console.log( branch, sem, div, coreSubjects, electiveSubjects )
+    // Extract subject names from core and elective subjects
+    const allSubjects = [...coreSubjects, ...electiveSubjects].map(
+      (subject) => subject.subjectName
+    );
+
+    // Query the mapping table
+    const facultyMappings = await mappingModel.find({
+      branch,
+      sem,
+      div,
+      subject: { $in: allSubjects }, // Match any of the student's subjects
+    });
+
+    if (!facultyMappings || facultyMappings.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No faculty mapping found for the given criteria" });
+    }
+    // console.log(facultyMappings)
+    res.status(200).json({ facultyMappings });
+  } catch (error) {
+    console.error("Error fetching faculty mappings:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
