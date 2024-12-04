@@ -7,10 +7,10 @@ const PannelStudent = () => {
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
   const navigateTo = useNavigate();
-  const { authUser } = useAuth();
+  const { authUser, studentProfile, setStudentProfile } = useAuth();
   console.log(authUser);
   const[studentId, setStudentId] = useState("");
-  const[profile, setProfile] = useState("")
+  // const[profile, setProfile] = useState("")
 
   const [showWindow, setShowWindow] = useState(false);
 
@@ -23,7 +23,7 @@ const PannelStudent = () => {
       console.log(key);
       const { data } = await axios.post("api/validate-Key", { key });
       
-      if (data && !profile?.feedbackGiven) {
+      if (data && !studentProfile?.feedbackGiven) {
         navigateTo("/give-feedback");
       } else {
         setError("Invalid key or feedback already given. Please try again.");
@@ -41,7 +41,8 @@ const PannelStudent = () => {
       console.log(studentId)
       const response = await axios.get(`/api/student-profile/${studentId}`);
       console.log(response.data.student)
-      setProfile(response.data.student)
+      setStudentProfile(response.data.student)
+      console.log(studentProfile)
     } catch (error) {
       console.log("Error fetching profile:", error)
 

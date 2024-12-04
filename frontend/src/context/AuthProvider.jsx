@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, Profiler, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(undefined);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const[studentProfile, setStudentProfile] = useState("");
   useEffect(() => {
     // Fetch user data from the server on initial load
     axios
@@ -35,6 +36,8 @@ export const AuthProvider = ({ children }) => {
         setLoading,
         isAuthenticated,
         setIsAuthenticated,
+        studentProfile,
+        setStudentProfile
       }}
     >
       {children}
