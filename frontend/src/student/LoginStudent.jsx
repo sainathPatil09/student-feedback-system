@@ -7,6 +7,7 @@ const LoginStudent = () => {
   const navigateTo = useNavigate();
   const { setIsAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const{studentProfile, setStudentProfile} = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,6 +29,7 @@ const LoginStudent = () => {
       console.log(response.data.student);
       alert("Student logged in successfully!");
       localStorage.setItem("auth", JSON.stringify(response.data.student));
+      setStudentProfile(response.data.student)
       setIsAuthenticated(true);
       setFormData({
         email: "",

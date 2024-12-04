@@ -7,22 +7,26 @@ const PannelStudent = () => {
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
   const navigateTo = useNavigate();
-  const { authUser, studentProfile, setStudentProfile } = useAuth();
-  console.log(authUser);
-  const[studentId, setStudentId] = useState("");
+  const { authUser, studentProfile } = useAuth();
+  console.log(studentProfile);
+  const [studentId, setStudentId] = useState("");
   // const[profile, setProfile] = useState("")
 
   const [showWindow, setShowWindow] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   const handleWindow = () => {
     setShowWindow(!showWindow);
+  };
+  const handleProfileView = () => {
+    setShowProfile(!showProfile);
   };
 
   const handleKeyValidation = async () => {
     try {
       console.log(key);
       const { data } = await axios.post("api/validate-Key", { key });
-      
+
       if (data && !studentProfile?.feedbackGiven) {
         navigateTo("/give-feedback");
       } else {
@@ -34,23 +38,23 @@ const PannelStudent = () => {
     }
   };
 
-  const getProfile = async (e) => {
-    e.preventDefault()
-    try {
-      setStudentId(authUser.id)
-      console.log(studentId)
-      const response = await axios.get(`/api/student-profile/${studentId}`);
-      console.log(response.data.student)
-      setStudentProfile(response.data.student)
-      console.log(studentProfile)
-    } catch (error) {
-      console.log("Error fetching profile:", error)
+  // const getProfile = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     setStudentId(authUser.id)
+  //     console.log(studentId)
+  //     const response = await axios.get(`/api/student-profile/${studentId}`);
+  //     console.log(response.data.student)
+  //     setStudentProfile(response.data.student)
+  //     console.log(studentProfile)
+  //   } catch (error) {
+  //     console.log("Error fetching profile:", error)
 
-    }
-  };
+  //   }
+  // };
   return (
     <>
-      <button onClick={getProfile} className="border-2 p-2 bg-blue-400">
+      <button onClick={handleProfileView} className="border-2 p-2 bg-blue-400">
         My-Profile
       </button>
       <button onClick={handleWindow} className="border-2 p-2 bg-blue-400">
@@ -77,6 +81,27 @@ const PannelStudent = () => {
           Submit Key
         </button>
         {error && <p className="text-red-500 mt-2">{error}</p>}
+      </div>
+
+      <div className={`${showProfile ? "block" : "hidden"}`}>
+        <p>name: {studentProfile?.name}</p>
+        <p>email: {studentProfile?.email}</p>
+        <p>usn: {studentProfile?.usn}</p>
+        <p>branch: {studentProfile?.branch}</p>
+        <p>sem: {studentProfile?.sem}</p>
+        <p>div: {studentProfile?.div}</p>
+        <p>
+          CoreSubject:{" "}
+          {studentProfile?.coreSubjects.map((s) => {
+            return s.subjectName + ", ";
+          })}
+        </p>
+        <p>
+          CoreSubject:{" "}
+          {studentProfile?.electiveSubjects.map((s) => {
+            return s.subjectName + ", ";
+          })}
+        </p>
       </div>
     </>
   );
