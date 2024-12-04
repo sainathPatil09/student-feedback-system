@@ -11,6 +11,7 @@ import { subjectModel } from "../model/subject.model.js";
 import { studentModelA } from "../model/studentA.model.js";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import { mappingModel } from "../model/mapping.model.js";
 
 export const studentLogin = async (req, res) => {
   try {
@@ -376,5 +377,32 @@ export const studentProfile = async(req, res)=>{
   } catch (error) {
     console.error("Error fetching student profile:", error.message);
     res.status(500).json({ message: "Failed to fetch student profile" });
+  }
+}
+
+
+export const getFacultyMappingForFeedback  = async(req, res)=>{
+  try {
+    const { branch, sem, div, coreSubjects, electiveSubjects } = req.body; // Assume student data is passed in the request
+    // console.log( branch, sem, div, coreSubjects, electiveSubjects )
+    // Extract subject names from core and elective subjects
+    const allSubjects = [...coreSubjects, ...electiveSubjects].map((subject) => subject.subjectName);
+
+    // Query the mapping table
+    const facultyMappings = await mappingModel.find({
+      branch,
+      sem,
+      div,
+      subject: { $in: allSubjects }, // Match any of the student's subjects
+    });
+
+    if (!facultyMappings || facultyMappings.length === 0) {
+      return res.status(404).json({ message: "No faculty mapping found for the given criteria" });
+    }
+    // console.log(facultyMappings)
+    res.status(200).json({ facultyMappings });
+  } catch (error) {
+    console.error("Error fetching faculty mappings:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
