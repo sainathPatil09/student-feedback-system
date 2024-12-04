@@ -343,3 +343,38 @@ export const validiateKey = async (req, res)=>{
     res.status(500).json({ message: "Error validating key." });
   }
 }
+
+export const studentProfile = async(req, res)=>{
+  try {
+    const { studentId } = req.params; // Assume studentId is passed in request parameters
+    console.log(studentId)
+    // Find student and populate coreSubjects and electiveSubjects
+    const student = await studentModelA
+      .findById(studentId)
+      .populate("coreSubjects", "subjectName") // Fetch only the subjectName field for coreSubjects
+      .populate("electiveSubjects", "subjectName"); // Fetch only the subjectName field for electiveSubjects
+    console.log(student)
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    // Build custom response
+    res.status(200).json({
+      message: "Student profile fetched successfully",
+      student: {
+        name: student.name,
+        email: student.email,
+        usn: student.usn,
+        branch: student.branch,
+        sem: student.sem,
+        div: student.div,
+        coreSubjects: student.coreSubjects, // Includes subjectName
+        electiveSubjects: student.electiveSubjects, // Includes subjectName
+        feedbackGiven: student.feedbackGiven,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching student profile:", error.message);
+    res.status(500).json({ message: "Failed to fetch student profile" });
+  }
+}

@@ -1,11 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 const PannelStudent = () => {
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
   const navigateTo = useNavigate();
+  const { authUser } = useAuth();
+  console.log(authUser);
+  const[studentId, setStudentId] = useState("");
+  const[profile, setProfile] = useState("")
 
   const [showWindow, setShowWindow] = useState(false);
 
@@ -17,22 +22,36 @@ const PannelStudent = () => {
     try {
       console.log(key);
       const { data } = await axios.post("api/validate-Key", { key });
-
-      if (data) {
+      
+      if (data && !profile?.feedbackGiven) {
         navigateTo("/give-feedback");
       } else {
-        setError("Invalid key. Please try again.");
+        setError("Invalid key or feedback already given. Please try again.");
       }
     } catch (error) {
       console.error("Error in validating key:", error);
       alert("Failed to validate key.");
     }
   };
+
+  const getProfile = async (e) => {
+    e.preventDefault()
+    try {
+      setStudentId(authUser.id)
+      console.log(studentId)
+      const response = await axios.get(`/api/student-profile/${studentId}`);
+      console.log(response.data.student)
+      setProfile(response.data.student)
+    } catch (error) {
+      console.log("Error fetching profile:", error)
+
+    }
+  };
   return (
     <>
-      <Link to={"/"} className="border-2 p-2 bg-blue-400">
+      <button onClick={getProfile} className="border-2 p-2 bg-blue-400">
         My-Profile
-      </Link>
+      </button>
       <button onClick={handleWindow} className="border-2 p-2 bg-blue-400">
         Give-Feedback
       </button>
