@@ -91,9 +91,9 @@ export const sendFeedback = async (req, res) => {
   // res.send("OK");
   try {
     const { studentId, feedback, feedbackDate } = req.body;
-    // console.log(studentId, feedback, feedbackDate)
+    console.log(studentId, feedback, feedbackDate)
 
-    const student = await studentModel.findById(studentId);
+    const student = await studentModelA.findById(studentId);
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
@@ -116,7 +116,7 @@ export const sendFeedback = async (req, res) => {
 
     // console.log(feedbackPromises, "feedbackPromises")
     const data = await Promise.all(feedbackPromises);
-    await studentModel.findByIdAndUpdate(studentId, { feedbackGiven: true });
+    await studentModelA.findByIdAndUpdate(studentId, { feedbackGiven: true });
     // console.log(data)
     if (data) {
       res.status(200).json({ message: "Feedback submitted successfully" });
@@ -383,6 +383,7 @@ export const studentProfile = async (req, res) => {
     res.status(200).json({
       message: "Student profile fetched successfully",
       student: {
+        id:student._id,
         name: student.name,
         email: student.email,
         usn: student.usn,
